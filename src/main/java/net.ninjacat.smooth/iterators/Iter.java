@@ -9,8 +9,8 @@ import java.util.*;
  * <p>Functional style immutable rich iterator</p>
  *
  * <p>Main difference from standart {@link java.util.Iterator} is that this iterator allows functions to be applied to the elements.
- * It supports standart operations like {@link #filter(net.ninjacat.smooth.functions.Predicate)}, {@link #map(net.ninjacat.smooth.functions.F)}
- * or {@link #reduce(Object, net.ninjacat.smooth.functions.F2)} and others.
+ * It supports standart operations like {@link #filter(net.ninjacat.smooth.functions.Predicate)}, {@link #map(net.ninjacat.smooth.functions.Func)}
+ * or {@link #reduce(Object, net.ninjacat.smooth.functions.Function2)} and others.
  * </p>
  *
  * <p>This is essentially a rich wrapper around {@link Iterator} over collection. Standard limitations of iterators apply,
@@ -48,10 +48,15 @@ public class Iter<E> implements Iterable<E> {
     }
 
     /**
-     *
-     * @param data
-     * @param <E>
-     * @return
+     * <p>
+     * Creates rich iterator wrapper around array of elements
+     * </p>
+     * <p>
+     * This iterator is created over copy of the array, so original array can be used or disposed of.
+     * </p>
+     * @param data the array
+     * @param <E> type of elements
+     * @return Rich iterator for array elements
      */
     public static <E> Iter<E> of(E... data) {
         return Iter.of(Arrays.asList(data));
@@ -101,11 +106,11 @@ public class Iter<E> implements Iterable<E> {
      * <p>This function will not create new iterator, instead transformation function will be applied to
      * the next original iterator's element during each call to {@link java.util.Iterator#next()} </p>
      *
-     * @param f   mapping function
+     * @param func   mapping function
      * @param <R> result type
      * @return Iterable iterator of mapped values
      */
-    public <R> Iter<R> map(final F<R, E> f) {
+    public <R> Iter<R> map(final Func<R, E> func) {
         return new Iter<R>(
                 new Iterator<R>() {
 
@@ -116,7 +121,7 @@ public class Iter<E> implements Iterable<E> {
 
                     @Override
                     public R next() {
-                        return f.apply(iterator.next());
+                        return func.apply(iterator.next());
                     }
 
                     @Override
@@ -145,7 +150,7 @@ public class Iter<E> implements Iterable<E> {
      * @param <R>      type of the resulting value
      * @return Value of the left-folded collection
      */
-    public <R> R reduce(final R starting, final F2<R, R, E> f) {
+    public <R> R reduce(final R starting, final Function2<R, R, E> f) {
         R result = starting;
         while (iterator.hasNext()) {
             result = f.apply(result, iterator.next());
@@ -162,7 +167,7 @@ public class Iter<E> implements Iterable<E> {
      * @param <R>      type of the resulting value
      * @return {@link Promise} of the value of the left-folded collection
      */
-    public <R> Promise<R> lazyReduce(final R starting, final F2<R, R, E> f) {
+    public <R> Promise<R> lazyReduce(final R starting, final Function2<R, R, E> f) {
         return new Promise<R>() {
             @Override
             public R get() {

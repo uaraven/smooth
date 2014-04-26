@@ -1,6 +1,6 @@
 package net.ninjacat.smooth.collections;
 
-import net.ninjacat.smooth.functions.F;
+import net.ninjacat.smooth.functions.Func;
 import net.ninjacat.smooth.functions.Predicate;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public final class Lists {
 
-    public static <E, R> List<R> map(List<E> list, F<R, E> mapFunc) {
+    public static <E, R> List<R> map(List<E> list, Func<R, E> mapFunc) {
         List<R> result = new ArrayList<R>(list.size());
         for (E e : list) {
             result.add(mapFunc.apply(e));

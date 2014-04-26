@@ -1,13 +1,11 @@
 package net.ninjacat.smooth.utils;
 
-import net.ninjacat.smooth.functions.F;
+import net.ninjacat.smooth.functions.Func;
 import org.junit.Test;
 
 import java.util.concurrent.Callable;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created on 26/04/14.
@@ -68,7 +66,7 @@ public class TryTest {
 
     @Test
     public void shouldExecuteFunctionWithParameter() throws Exception {
-        Try<Integer> actual = Try.execute(new F<Integer, Integer>() {
+        Try<Integer> actual = Try.execute(new Func<Integer, Integer>() {
             @Override
             public Integer apply(Integer integer) {
                 return 42 + integer;
@@ -85,7 +83,7 @@ public class TryTest {
             public Integer call() throws Exception {
                 return 42;
             }
-        }).map(new F<String, Integer>() {
+        }).map(new Func<String, Integer>() {
             @Override
             public String apply(Integer integer) {
                 return String.valueOf(integer);
@@ -102,7 +100,7 @@ public class TryTest {
             public Integer call() throws Exception {
                 throw new NumberFormatException();
             }
-        }).map(new F<String, Integer>() {
+        }).map(new Func<String, Integer>() {
             @Override
             public String apply(Integer integer) {
                 return String.valueOf(integer);

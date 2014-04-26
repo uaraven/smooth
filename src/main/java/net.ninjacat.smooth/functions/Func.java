@@ -1,5 +1,5 @@
 package net.ninjacat.smooth.functions;
 
-public interface F<R, P> {
+public interface Func<R, P> {
     R apply(P p);
 }

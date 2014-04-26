@@ -1,7 +1,7 @@
 package net.ninjacat.smooth.utils;
 
 
-import net.ninjacat.smooth.functions.F;
+import net.ninjacat.smooth.functions.Func;
 
 import java.util.concurrent.Callable;
 
@@ -39,7 +39,7 @@ public abstract class Try<T> {
      * @param <T>  type of result
      * @return delayed function execution which can be executed by supplying it with parameter.
      */
-    public static <P, T> FunctionExecutor<T, P> execute(F<T, P> func) {
+    public static <P, T> FunctionExecutor<T, P> execute(Func<T, P> func) {
         return new FunctionExecutor<T, P>(func);
     }
 
@@ -83,7 +83,7 @@ public abstract class Try<T> {
      * @param <S>    type of returning value of mapper function
      * @return result of execution of mapper function wrapped in Try
      */
-    public <S> Try<S> map(F<S, T> mapper) {
+    public <S> Try<S> map(Func<S, T> mapper) {
         if (isSuccessful()) {
             return Try.execute(mapper).with(getValue());
         } else {
@@ -148,9 +148,9 @@ public abstract class Try<T> {
     }
 
     public static final class FunctionExecutor<R, P> {
-        private final F<R, P> function;
+        private final Func<R, P> function;
 
-        private FunctionExecutor(F<R, P> function) {
+        private FunctionExecutor(Func<R, P> function) {
             this.function = function;
         }
 

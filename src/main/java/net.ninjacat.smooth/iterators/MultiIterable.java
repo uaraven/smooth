@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * User: raven
- * Date: 06/09/13
+ * Iterable that can host multiple {@link java.lang.Iterable}s and provide an {@link java.util.Iterator}
+ * to walk them all.
  */
 public class MultiIterable<T> implements Iterable<T> {
     private List<Iterable<T>> collections;

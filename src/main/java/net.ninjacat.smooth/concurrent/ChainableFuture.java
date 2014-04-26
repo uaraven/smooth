@@ -1,16 +1,15 @@
 package net.ninjacat.smooth.concurrent;
 
-import net.ninjacat.smooth.functions.F;
+import net.ninjacat.smooth.functions.Func;
 import net.ninjacat.smooth.functions.Procedure;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
-/**
- * Created on 26/04/14.
- */
-public class ChainableFuture<E, T> extends Future<E> {
 
-    private final F<E, T> transform;
+class ChainableFuture<E, T> extends Future<E> {
+
+    private final Func<E, T> transform;
     private final Procedure<T> onPrevSuccess = new Procedure<T>() {
         @Override
         public void call(final T t) {
@@ -22,25 +21,20 @@ public class ChainableFuture<E, T> extends Future<E> {
             });
         }
     };
-
     private final Procedure<Throwable> onPrevFailed = new Procedure<Throwable>() {
         @Override
         public void call(final Throwable throwable) {
             doIt(new Callable<E>() {
                 @Override
                 public E call() throws Exception {
-                    if (throwable instanceof Exception) {
-                        throw (Exception)throwable;
-                    }else{
-                        throw new Exception(throwable);
-                    }
+                    throw (Exception) throwable;
                 }
             });
         }
     };
 
-    ChainableFuture(Future<T> parent, F<E, T> transform) {
-        super(null);
+    ChainableFuture(Future<T> parent, Func<E, T> transform, ExecutorService executorService) {
+        super(executorService);
         this.transform = transform;
         parent.onSuccess(onPrevSuccess);
         parent.onFailure(onPrevFailed);

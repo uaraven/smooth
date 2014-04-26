@@ -35,7 +35,7 @@ public class IterTest {
     @Test
     public void mapShouldTransformValues() throws Exception {
         Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
-        Iterable<Integer> transformed = iter.map(new F<Integer, Integer>() {
+        Iterable<Integer> transformed = iter.map(new Func<Integer, Integer>() {
             @Override
             public Integer apply(Integer integer) {
                 return integer * 2;
@@ -54,7 +54,7 @@ public class IterTest {
 
         final SideEffect sideEffect = new SideEffect();
 
-        iter.map(new F<Integer, Integer>() {
+        iter.map(new Func<Integer, Integer>() {
             @Override
             public Integer apply(Integer integer) {
                 sideEffect.sideEffect();
@@ -101,7 +101,7 @@ public class IterTest {
     public void reduceShouldFoldLeft() throws Exception {
         Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
 
-        int result = iter.reduce(0, new F2<Integer, Integer, Integer>() {
+        int result = iter.reduce(0, new Function2<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer integer, Integer integer2) {
                 return integer + integer2;
@@ -115,7 +115,7 @@ public class IterTest {
     public void lazyReduceShouldFoldLeft() throws Exception {
         Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
 
-        Promise<Integer> result = iter.lazyReduce(0, new F2<Integer, Integer, Integer>() {
+        Promise<Integer> result = iter.lazyReduce(0, new Function2<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer integer, Integer integer2) {
                 return integer + integer2;
@@ -131,7 +131,7 @@ public class IterTest {
 
         final SideEffect sideEffect = new SideEffect();
 
-        iter.lazyReduce(0, new F2<Integer, Integer, Integer>() {
+        iter.lazyReduce(0, new Function2<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer integer, Integer integer2) {
                 sideEffect.sideEffect();

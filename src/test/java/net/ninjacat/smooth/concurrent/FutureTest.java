@@ -1,6 +1,6 @@
 package net.ninjacat.smooth.concurrent;
 
-import net.ninjacat.smooth.functions.F;
+import net.ninjacat.smooth.functions.Func;
 import net.ninjacat.smooth.functions.Procedure;
 import org.junit.Test;
 
@@ -106,7 +106,7 @@ public class FutureTest {
 
     @Test
     public void shouldChainSuccessfulExecution() throws Exception {
-        F<Integer, Integer> increment = new F<Integer, Integer>() {
+        Func<Integer, Integer> increment = new Func<Integer, Integer>() {
             @Override
             public Integer apply(Integer integer) {
                 return integer + 1;
@@ -130,7 +130,7 @@ public class FutureTest {
 
     @Test
     public void shouldChainFailedExecution() throws Exception {
-        F<Integer, Integer> increment = new F<Integer, Integer>() {
+        Func<Integer, Integer> increment = new Func<Integer, Integer>() {
             @Override
             public Integer apply(Integer integer) {
                 throw new IllegalStateException();

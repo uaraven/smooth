@@ -1,11 +1,8 @@
 package net.ninjacat.smooth.concurrent;
 
-import com.sun.xml.internal.ws.util.CompletedFuture;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.Future;
 
 /**
  * Created on 26/04/14.
@@ -75,5 +72,35 @@ public class NonParallelExecutorService implements ExecutorService {
     @Override
     public void execute(Runnable command) {
 
+    }
+
+    private class CompletedFuture<T> implements Future<T> {
+        public CompletedFuture(Object o, Object o1) {
+        }
+
+        @Override
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            return false;
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return false;
+        }
+
+        @Override
+        public boolean isDone() {
+            return false;
+        }
+
+        @Override
+        public T get() throws InterruptedException, ExecutionException {
+            return null;
+        }
+
+        @Override
+        public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+            return null;
+        }
     }
 }

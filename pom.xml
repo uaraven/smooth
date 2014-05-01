@@ -17,7 +17,6 @@
 
     </dependencies>
 
-    <!--
     <distributionManagement>
         <repository>
             <id>internal.repo</id>
@@ -25,7 +24,6 @@
             <url>${internal.repo.path}</url>
         </repository>
     </distributionManagement>
-    -->
 
 </project>
 

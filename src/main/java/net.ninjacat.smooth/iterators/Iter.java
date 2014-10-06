@@ -8,8 +8,8 @@ import java.util.*;
 /**
  * <p>Functional style immutable rich iterator</p>
  *
- * <p>Main difference from standart {@link java.util.Iterator} is that this iterator allows functions to be applied to the elements.
- * It supports standart operations like {@link #filter(net.ninjacat.smooth.functions.Predicate)}, {@link #map(net.ninjacat.smooth.functions.Func)}
+ * <p>Main difference from standard {@link java.util.Iterator} is that this iterator allows functions to be applied to the elements.
+ * It supports standard operations like {@link #filter(net.ninjacat.smooth.functions.Predicate)}, {@link #map(net.ninjacat.smooth.functions.Func)}
  * or {@link #reduce(Object, net.ninjacat.smooth.functions.Function2)} and others.
  * </p>
  *

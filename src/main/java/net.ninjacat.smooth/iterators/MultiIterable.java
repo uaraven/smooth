@@ -1,9 +1,6 @@
 package net.ninjacat.smooth.iterators;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Iterable that can host multiple {@link java.lang.Iterable}s and provide an {@link java.util.Iterator}
@@ -11,6 +8,10 @@ import java.util.NoSuchElementException;
  */
 public class MultiIterable<T> implements Iterable<T> {
     private List<Iterable<T>> collections;
+
+    public MultiIterable(Iterable<T>    ... iterables) {
+        this.collections = new ArrayList<Iterable<T>>(Arrays.asList(iterables));
+    }
 
     public MultiIterable() {
         this.collections = new ArrayList<Iterable<T>>();

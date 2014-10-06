@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 
-    <groupId>net.ninjacat.smooth</groupId>
+    <groupId>net.ninjacat</groupId>
     <artifactId>smooth</artifactId>
-    <version>0.0.1</version>
+    <version>0.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Collections and concurrency utility functions for Java</description>

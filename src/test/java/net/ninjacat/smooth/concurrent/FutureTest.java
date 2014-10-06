@@ -1,18 +1,35 @@
 package net.ninjacat.smooth.concurrent;
 
-import net.ninjacat.smooth.functions.Func;
 import net.ninjacat.smooth.functions.Procedure;
+import net.ninjacat.smooth.functions.Func;
+
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created on 26/04/14.
  */
 public class FutureTest {
+
+    private final Answer<java.util.concurrent.Future<?>> answer = new Answer<java.util.concurrent.Future<?>>() {
+        @Override
+        public java.util.concurrent.Future<?> answer(InvocationOnMock invocationOnMock) throws Throwable {
+            Runnable arg = (Runnable) invocationOnMock.getArguments()[0];
+            arg.run();
+            return mock(java.util.concurrent.Future.class);
+        }
+    };
 
     @Test
     public void shouldCallSuccessAfterDelay() throws Exception {
@@ -38,8 +55,10 @@ public class FutureTest {
     @Test
     public void shouldCallOnSuccessImmediately() throws Exception {
         final int[] result = new int[1];
-        Future<Integer> integerFuture = new Future<Integer>(new NonParallelExecutorService());
-        integerFuture.onSuccess(new Procedure<Integer>() {
+        ExecutorService service = getExecutorService();
+        Future<Integer> integerFuture = new Future<Integer>(service);
+
+        integerFuture.onSuccess(new net.ninjacat.smooth.functions.Procedure<Integer>() {
             @Override
             public void call(Integer integer) {
                 result[0] = integer;
@@ -87,7 +106,7 @@ public class FutureTest {
     @Test
     public void shouldReportFailureImmediately() throws Exception {
         final boolean[] failed = new boolean[1];
-        Future<Integer> integerFuture = new Future<Integer>(new NonParallelExecutorService());
+        Future<Integer> integerFuture = new Future<Integer>(getExecutorService());
         integerFuture.onFailure(new Procedure<Throwable>() {
             @Override
             public void call(Throwable throwable) {
@@ -158,4 +177,11 @@ public class FutureTest {
         Thread.sleep(100);
         assertEquals(-1, result[0]);
     }
+
+    private ExecutorService getExecutorService() {
+        ExecutorService service = mock(ExecutorService.class);
+        doAnswer(answer).when(service).submit(any(Runnable.class));
+        return service;
+    }
+
 }

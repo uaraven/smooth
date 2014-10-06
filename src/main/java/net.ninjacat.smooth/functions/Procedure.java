@@ -6,7 +6,7 @@ package net.ninjacat.smooth.functions;
 public abstract class Procedure<T> implements Func<Void, T> {
 
     @Override
-    public Void apply(T t) {
+    public final Void apply(T t) {
         call(t);
         return null;
     }

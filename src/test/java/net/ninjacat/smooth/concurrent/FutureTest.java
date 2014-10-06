@@ -1,8 +1,23 @@
+/*
+ * Copyright 2014 Oleksiy Voronin <ovoronin@gmail.com>
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package net.ninjacat.smooth.concurrent;
 
-import net.ninjacat.smooth.functions.Procedure;
 import net.ninjacat.smooth.functions.Func;
-
+import net.ninjacat.smooth.functions.Procedure;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -15,11 +30,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-/**
- * Created on 26/04/14.
- */
 public class FutureTest {
 
     private final Answer<java.util.concurrent.Future<?>> answer = new Answer<java.util.concurrent.Future<?>>() {
@@ -81,13 +92,13 @@ public class FutureTest {
         integerFuture.doIt(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
-                throw new IllegalAccessException();
+                throw new IllegalAccessException("");
             }
         });
-        final int[] result = new int[1];
 
         Thread.sleep(100);
 
+        final int[] result = new int[1];
         integerFuture.onSuccess(new Procedure<Integer>() {
             @Override
             public void call(Integer integer) {
@@ -98,7 +109,7 @@ public class FutureTest {
         integerFuture.onFailure(new Procedure<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-                assertTrue(throwable instanceof IllegalAccessException);
+                assertTrue("Expecting IllegalAccessException", throwable instanceof IllegalAccessException);
             }
         });
     }
@@ -116,11 +127,11 @@ public class FutureTest {
         integerFuture.doIt(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
-                throw new IllegalAccessException();
+                throw new IllegalAccessException("");
             }
         });
 
-        assertTrue(failed[0]);
+        assertTrue("Expecting failure to be reported", failed[0]);
     }
 
     @Test
@@ -144,7 +155,7 @@ public class FutureTest {
             }
         });
         Thread.sleep(100);
-        assertEquals(2, result[0]);
+        assertEquals("Expecting correct result", 2, result[0]);
     }
 
     @Test
@@ -152,7 +163,7 @@ public class FutureTest {
         Func<Integer, Integer> increment = new Func<Integer, Integer>() {
             @Override
             public Integer apply(Integer integer) {
-                throw new IllegalStateException();
+                throw new IllegalStateException("");
             }
         };
         final int[] result = new int[1];
@@ -175,7 +186,7 @@ public class FutureTest {
                     }
                 });
         Thread.sleep(100);
-        assertEquals(-1, result[0]);
+        assertEquals("Expecting failure to be propagated and reported", -1, result[0]);
     }
 
     private ExecutorService getExecutorService() {

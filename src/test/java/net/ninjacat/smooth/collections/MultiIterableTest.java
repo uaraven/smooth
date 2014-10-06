@@ -1,4 +1,20 @@
-package net.ninjacat.collections;
+/*
+ * Copyright 2014 Oleksiy Voronin <ovoronin@gmail.com>
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package net.ninjacat.smooth.collections;
 
 import net.ninjacat.smooth.iterators.MultiIterable;
 import org.junit.Test;
@@ -6,8 +22,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import static net.ninjacat.collections.IterFixtures.verifyNext;
-import static net.ninjacat.collections.IterFixtures.verifyNoNext;
+import static net.ninjacat.smooth.collections.IterFixtures.verifyNext;
+import static net.ninjacat.smooth.collections.IterFixtures.verifyNoNext;
 
 /**
  * User: raven

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2014 Oleksiy Voronin <ovoronin@gmail.com>
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package net.ninjacat.smooth.iterators;
 
 import net.ninjacat.smooth.collections.Collect;
@@ -7,12 +23,12 @@ import java.util.*;
 
 /**
  * <p>Functional style immutable rich iterator</p>
- *
+ * <p/>
  * <p>Main difference from standard {@link java.util.Iterator} is that this iterator allows functions to be applied to the elements.
  * It supports standard operations like {@link #filter(net.ninjacat.smooth.functions.Predicate)}, {@link #map(net.ninjacat.smooth.functions.Func)}
  * or {@link #reduce(Object, net.ninjacat.smooth.functions.Function2)} and others.
  * </p>
- *
+ * <p/>
  * <p>This is essentially a rich wrapper around {@link Iterator} over collection. Standard limitations of iterators apply,
  * like restriction of changing collection during iteration</p>
  *
@@ -21,12 +37,16 @@ import java.util.*;
 public class Iter<E> implements Iterable<E> {
     private final Iterator<E> iterator;
 
+    private Iter(Iterator<E> c) {
+        this.iterator = c;
+    }
+
     /**
      * Creates iterator over collection. If the collection is changed during iteration (especially possible with lazy calculations)
      * {@link java.util.ConcurrentModificationException} may be thrown.
      *
      * @param coll collection to be wrapped
-     * @param <E> type of elements in the collection
+     * @param <E>  type of elements in the collection
      * @return Rich iterator over collection elements
      */
     public static <E> Iter<E> of(Collection<E> coll) {
@@ -39,8 +59,9 @@ public class Iter<E> implements Iterable<E> {
      * </p><p>
      * Do not use wrapped iterator as it will interfere with operations over rich iterator.
      * </p>
+     *
      * @param iter {@link java.util.Iterator} to wrap with rich functionality
-     * @param <E> type of elements in the collection
+     * @param <E>  type of elements in the collection
      * @return Rich iterator wrapped around Java iterator
      */
     public static <E> Iter<E> of(Iterator<E> iter) {
@@ -54,16 +75,13 @@ public class Iter<E> implements Iterable<E> {
      * <p>
      * This iterator is created over copy of the array, so original array can be used or disposed of.
      * </p>
+     *
      * @param data the array
-     * @param <E> type of elements
+     * @param <E>  type of elements
      * @return Rich iterator for array elements
      */
     public static <E> Iter<E> of(E... data) {
         return Iter.of(Arrays.asList(data));
-    }
-
-    private Iter(Iterator<E> c) {
-        this.iterator = c;
     }
 
     /**
@@ -106,8 +124,8 @@ public class Iter<E> implements Iterable<E> {
      * <p>This function will not create new iterator, instead transformation function will be applied to
      * the next original iterator's element during each call to {@link java.util.Iterator#next()} </p>
      *
-     * @param func   mapping function
-     * @param <R> result type
+     * @param func mapping function
+     * @param <R>  result type
      * @return Iterable iterator of mapped values
      */
     public <R> Iter<R> map(final Func<R, E> func) {

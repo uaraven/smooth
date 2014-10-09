@@ -72,6 +72,26 @@ public final class Collect {
         return Collections.unmodifiableSet((Set<? extends E>) iteratorToCollection(iter, new HashSet<E>()));
     }
 
+    public static <E> Iterator<E> enumerationToIterator(final Enumeration<E> enumeration) {
+        return new Iterator<E>() {
+
+            @Override
+            public boolean hasNext() {
+                return enumeration.hasMoreElements();
+            }
+
+            @Override
+            public E next() {
+                return enumeration.nextElement();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Remove operation is not supported");
+            }
+        };
+    }
+
     /**
      * <p>
      * Reads elements from {@link java.util.Iterator} to a supplied collection

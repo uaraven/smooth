@@ -41,6 +41,10 @@ public class Iter<E> implements Iterable<E> {
         this.iterator = c;
     }
 
+    public static <E> Iter<E> of(Enumeration<E> enumeration) {
+        return new Iter<E>(Collect.enumerationToIterator(enumeration));
+    }
+
     /**
      * Creates iterator over collection. If the collection is changed during iteration (especially possible with lazy calculations)
      * {@link java.util.ConcurrentModificationException} may be thrown.

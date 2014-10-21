@@ -148,7 +148,7 @@ public class Iter<E> implements Iterable<E> {
 
                     @Override
                     public void remove() {
-                        throw new UnsupportedOperationException();
+                        throw new UnsupportedOperationException("Mapped rich iterators does not support remove()");
                     }
                 });
     }
@@ -158,7 +158,7 @@ public class Iter<E> implements Iterable<E> {
      *
      * @param executor {@link Procedure} to be executed on each element of iterable
      */
-    public void forEach(final Procedure<E> executor) {
+    public void forEach(Procedure<E> executor) {
         while (iterator.hasNext()) {
             executor.call(iterator.next());
         }
@@ -172,7 +172,7 @@ public class Iter<E> implements Iterable<E> {
      * @param <R>      type of the resulting value
      * @return Value of the left-folded collection
      */
-    public <R> R reduce(final R starting, final Function2<R, R, E> f) {
+    public <R> R reduce(R starting, Function2<R, R, E> f) {
         R result = starting;
         while (iterator.hasNext()) {
             result = f.apply(result, iterator.next());
@@ -212,7 +212,7 @@ public class Iter<E> implements Iterable<E> {
      */
     public Iter<E> filter(final Predicate<E> predicate) {
         return new Iter<E>(new Iterator<E>() {
-            E nextValue;
+            private E nextValue;
 
             public boolean hasNext() {
                 if (nextValue != null) {
@@ -252,7 +252,7 @@ public class Iter<E> implements Iterable<E> {
      * @param defaultValue default value that will be returned if none of the elements in the iterator matches predicate
      * @return Element found or of the default value
      */
-    public E find(final Predicate<E> matcher, final E defaultValue) {
+    public E find(Predicate<E> matcher, E defaultValue) {
         while (iterator.hasNext()) {
             E next = iterator.next();
             if (matcher.matches(next)) {
@@ -291,7 +291,7 @@ public class Iter<E> implements Iterable<E> {
      * @param matcher - {@link Predicate} to check elements
      * @return {@code true} if all elements match predicate or {@code false} otherwise
      */
-    public boolean all(final Predicate<E> matcher) {
+    public boolean all(Predicate<E> matcher) {
         while (iterator.hasNext()) {
             if (!matcher.matches(iterator.next())) {
                 return false;
@@ -306,7 +306,7 @@ public class Iter<E> implements Iterable<E> {
      * @param matcher - {@link Predicate} to check elements
      * @return {@code true} if any of the elements match predicate or {@code false} otherwise
      */
-    public boolean any(final Predicate<E> matcher) {
+    public boolean any(Predicate<E> matcher) {
         while (iterator.hasNext()) {
             if (matcher.matches(iterator.next())) {
                 return true;
@@ -319,5 +319,15 @@ public class Iter<E> implements Iterable<E> {
     public Iterator<E> iterator() {
         return iterator;
     }
+
+    public String mkStr(String separator) {
+        StringBuilder builder = new StringBuilder();
+        while (iterator.hasNext()) {
+            builder.append(iterator.next().toString()).append(separator);
+        }
+        builder.setLength(builder.length() - separator.length());
+        return builder.toString();
+    }
+
 }
 

@@ -26,7 +26,7 @@ public class MultiIterable<T> implements Iterable<T> {
     private List<Iterable<T>> collections;
 
     public MultiIterable(Iterable<T>... iterables) {
-        this.collections = new ArrayList<Iterable<T>>(Arrays.asList(iterables));
+        collections = new ArrayList<Iterable<T>>(Arrays.asList(iterables));
     }
 
     public MultiIterable() {

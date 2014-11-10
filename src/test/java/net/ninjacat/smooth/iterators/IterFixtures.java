@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package net.ninjacat.smooth.collections;
+package net.ninjacat.smooth.iterators;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;

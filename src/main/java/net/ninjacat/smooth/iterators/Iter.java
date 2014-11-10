@@ -37,8 +37,8 @@ import java.util.*;
 public class Iter<E> implements Iterable<E> {
     private final Iterator<E> iterator;
 
-    private Iter(Iterator<E> c) {
-        this.iterator = c;
+    Iter(Iterator<E> c) {
+        iterator = c;
     }
 
     public static <E> Iter<E> of(Enumeration<E> enumeration) {

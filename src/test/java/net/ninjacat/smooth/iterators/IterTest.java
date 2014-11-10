@@ -14,10 +14,11 @@
  *    limitations under the License.
  */
 
-package net.ninjacat.smooth.collections;
+package net.ninjacat.smooth.iterators;
 
+import net.ninjacat.smooth.collections.Collect;
 import net.ninjacat.smooth.functions.*;
-import net.ninjacat.smooth.iterators.Iter;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -25,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static net.ninjacat.smooth.collections.IterFixtures.*;
+import static net.ninjacat.smooth.iterators.IterFixtures.SideEffect;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -44,7 +45,7 @@ public class IterTest {
         List<String> original = Arrays.asList("1", "1", "Last");
         Set<String> result = Iter.of(original).toSet();
 
-        assertThat(result, is(Collect.setOf("1", "Last")));
+        assertThat(result, CoreMatchers.is(Collect.setOf("1", "Last")));
     }
 
     @Test
@@ -57,17 +58,17 @@ public class IterTest {
             }
         });
         Iterator<Integer> iterator = transformed.iterator();
-        verifyNext(iterator, 2);
-        verifyNext(iterator, 4);
-        verifyNext(iterator, 6);
-        verifyNoNext(iterator);
+        IterFixtures.verifyNext(iterator, 2);
+        IterFixtures.verifyNext(iterator, 4);
+        IterFixtures.verifyNext(iterator, 6);
+        IterFixtures.verifyNoNext(iterator);
     }
 
     @Test
     public void mapShouldBeLazy() throws Exception {
         Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
 
-        final SideEffect sideEffect = new SideEffect();
+        final IterFixtures.SideEffect sideEffect = new IterFixtures.SideEffect();
 
         iter.map(new Func<Integer, Integer>() {
             @Override
@@ -89,16 +90,16 @@ public class IterTest {
             }
         });
         Iterator<Integer> iterator = filtered.iterator();
-        verifyNext(iterator, 1);
-        verifyNext(iterator, 3);
-        verifyNoNext(iterator);
+        IterFixtures.verifyNext(iterator, 1);
+        IterFixtures.verifyNext(iterator, 3);
+        IterFixtures.verifyNoNext(iterator);
     }
 
     @Test
     public void filterShouldBeLazy() throws Exception {
         Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
 
-        final SideEffect sideEffect = new SideEffect();
+        final IterFixtures.SideEffect sideEffect = new IterFixtures.SideEffect();
 
         iter.filter(new Predicate<Integer>() {
             @Override
@@ -144,7 +145,7 @@ public class IterTest {
     public void lazyReduceShouldBeLazy() throws Exception {
         Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
 
-        final SideEffect sideEffect = new SideEffect();
+        final IterFixtures.SideEffect sideEffect = new IterFixtures.SideEffect();
 
         iter.lazyReduce(0, new Function2<Integer, Integer, Integer>() {
             @Override
@@ -198,6 +199,41 @@ public class IterTest {
         }, -1);
 
         assertThat(result, is(-1));
+    }
+
+    @Test
+    public void lazyFindShouldBeLazy() throws Exception {
+        Iter<Integer> iter = Iter.of(1, 2);
+
+        final SideEffect sideEffect = new SideEffect();
+
+        iter.lazyFind(new Predicate<Integer>() {
+            @Override
+            public boolean matches(Integer integer) {
+                sideEffect.sideEffect();
+                return integer.equals(3);
+            }
+        }, -1);
+
+        assertThat(sideEffect.hasSideEffects(), is(false));
+    }
+
+    @Test
+    public void shouldFindDataWhenDoingLazySearch() throws Exception {
+        Iter<Integer> iter = Iter.of(1, 2, 3, 4);
+
+        final SideEffect sideEffect = new SideEffect();
+
+        Integer result = iter.lazyFind(new Predicate<Integer>() {
+            @Override
+            public boolean matches(Integer integer) {
+                sideEffect.sideEffect();
+                return integer.equals(3);
+            }
+        }, -1).get();
+
+        assertThat(sideEffect.hasSideEffects(), is(true));
+        assertThat(result, is(3));
     }
 
     @Test
@@ -256,4 +292,12 @@ public class IterTest {
         assertThat(result, is(false));
     }
 
+    @Test
+    public void shouldCreateStringWithDelimiters() throws Exception {
+        Iter<Integer> iter = Iter.of(1, 2, 3);
+
+        String result = iter.mkStr("->");
+
+        assertThat("Should create string with separators", result, is("1->2->3"));
+    }
 }

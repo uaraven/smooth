@@ -14,16 +14,15 @@
  *    limitations under the License.
  */
 
-package net.ninjacat.smooth.collections;
+package net.ninjacat.smooth.iterators;
 
-import net.ninjacat.smooth.iterators.MultiIterable;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-import static net.ninjacat.smooth.collections.IterFixtures.verifyNext;
-import static net.ninjacat.smooth.collections.IterFixtures.verifyNoNext;
+import static net.ninjacat.smooth.iterators.IterFixtures.verifyNext;
+import static net.ninjacat.smooth.iterators.IterFixtures.verifyNoNext;
 
 /**
  * User: raven

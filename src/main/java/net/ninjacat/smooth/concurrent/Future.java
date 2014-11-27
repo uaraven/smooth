@@ -19,6 +19,7 @@ package net.ninjacat.smooth.concurrent;
 import net.ninjacat.smooth.functions.Func;
 import net.ninjacat.smooth.functions.Procedure;
 import net.ninjacat.smooth.utils.Try;
+import net.ninjacat.smooth.validator.Validators;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -112,13 +113,11 @@ public class Future<E> {
      * @return this future
      */
     public final Future<E> onSuccess(Procedure<E> onSuccess) {
-        if (successHandler != null) {
-            throw new IllegalStateException("Cannot reassign onSuccess handler");
-        }
+        Validators.validateNull(successHandler, new IllegalStateException("Cannot reassign onSuccess handler"));
         if (result != null && result.isSuccessful()) {
             onSuccess.call(result.getValue());
         } else {
-            this.successHandler = onSuccess;
+            successHandler = onSuccess;
         }
         return this;
     }
@@ -133,13 +132,11 @@ public class Future<E> {
      * @return this future
      */
     public final Future<E> onFailure(Procedure<Throwable> onFailure) {
-        if (failHandler != null) {
-            throw new IllegalStateException("Cannot reassign onFailure handler");
-        }
+        Validators.validateNull(failHandler, new IllegalStateException("Cannot reassign onFailure handler"));
         if (result != null && !result.isSuccessful()) {
             onFailure.call(result.getFailure());
         } else {
-            this.failHandler = onFailure;
+            failHandler = onFailure;
         }
         return this;
     }
@@ -158,21 +155,20 @@ public class Future<E> {
      */
     public final Future<E> doIt(final Callable<E> callable) {
         if (executedOnce) {
-            throw new IllegalStateException();
-        } else {
-            executedOnce = true;
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    result = Try.execute(callable);
-                    if (result.isSuccessful()) {
-                        reportSuccess(result.getValue());
-                    } else {
-                        reportFailure(result.getFailure());
-                    }
-                }
-            });
+            throw new IllegalStateException("Cannot execute more than once");
         }
+        executedOnce = true;
+        executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                result = Try.execute(callable);
+                if (result.isSuccessful()) {
+                    reportSuccess(result.getValue());
+                } else {
+                    reportFailure(result.getFailure());
+                }
+            }
+        });
         return this;
     }
 

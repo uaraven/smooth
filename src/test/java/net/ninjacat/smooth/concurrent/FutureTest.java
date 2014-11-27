@@ -69,7 +69,7 @@ public class FutureTest {
         ExecutorService service = getExecutorService();
         Future<Integer> integerFuture = new Future<Integer>(service);
 
-        integerFuture.onSuccess(new net.ninjacat.smooth.functions.Procedure<Integer>() {
+        integerFuture.onSuccess(new Procedure<Integer>() {
             @Override
             public void call(Integer integer) {
                 result[0] = integer;

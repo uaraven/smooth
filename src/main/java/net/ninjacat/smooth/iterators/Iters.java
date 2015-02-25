@@ -26,8 +26,9 @@ public final class Iters {
 
     /**
      * Generate iterable which returns integers in range [from; to)
+     *
      * @param from starting value
-     * @param to upper bound
+     * @param to   upper bound
      * @return rich iterator {@link net.ninjacat.smooth.iterators.Iter}
      */
     public static Iter<Integer> range(final int from, final int to) {
@@ -56,11 +57,25 @@ public final class Iters {
         });
     }
 
+    /**
+     * Generates an iterable for a range from zero to specified value, upper bound value is not included
+     *
+     * @param to upper bound of the range
+     * @return Iterable range, see {@link #range(int, int)}
+     */
     public static Iter<Integer> range(int to) {
         return range(0, to);
     }
 
-    public static <T> Iter<T> multi(final T value, final int count) {
+    /**
+     * Returns iterable which generates the same value for specified number of iterations
+     *
+     * @param value value to generate
+     * @param count number of iterations
+     * @param <T>   Type of the value
+     * @return Iterable with predefined number of iterations, each returning the same value
+     */
+    public static <T> Iter<T> repeat(final T value, final int count) {
         return Iter.of(new Iterator<T>() {
             private int position = 0;
 

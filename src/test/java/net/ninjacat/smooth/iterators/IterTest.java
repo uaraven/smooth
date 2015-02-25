@@ -21,14 +21,12 @@ import net.ninjacat.smooth.functions.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static net.ninjacat.smooth.iterators.IterFixtures.SideEffect;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class IterTest {
 
@@ -299,5 +297,14 @@ public class IterTest {
         String result = iter.mkStr("->");
 
         assertThat("Should create string with separators", result, is("1->2->3"));
+    }
+
+    @Test
+    public void shouldCollectElements() throws Exception {
+        Iter<Integer> iter = Iter.of(1, 2, 3);
+
+        Collection<Integer> collection = iter.collectWith(Collectors.<Integer>arrayList());
+
+        assertThat("should contain elements from iterable", collection, hasItems(1, 2, 3));
     }
 }

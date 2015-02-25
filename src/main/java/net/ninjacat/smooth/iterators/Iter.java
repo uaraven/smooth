@@ -320,6 +320,12 @@ public class Iter<E> implements Iterable<E> {
         return iterator;
     }
 
+    /**
+     * Joins all the elements in the collection into string with supplied separator
+     *
+     * @param separator string to separate elements
+     * @return String
+     */
     public String mkStr(String separator) {
         StringBuilder builder = new StringBuilder();
         while (iterator.hasNext()) {
@@ -327,6 +333,16 @@ public class Iter<E> implements Iterable<E> {
         }
         builder.setLength(builder.length() - separator.length());
         return builder.toString();
+    }
+
+    /**
+     * Collect this iterable into collection
+     *
+     * @param collector {@link Collector} which will perform collection
+     * @return {@link Collection} of all the elements in this iterable
+     */
+    public Collection<E> collectWith(Collector<E> collector) {
+        return collector.collect(this);
     }
 
 }

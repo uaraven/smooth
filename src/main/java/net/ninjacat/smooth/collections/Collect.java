@@ -33,7 +33,7 @@ public final class Collect {
      * @param <E>      type of the elements
      * @return Unmodifiable list
      */
-    public static <E> List<E> listOf(E... elements) {
+    public static <E> List<E> listOf(final E... elements) {
         return Collections.unmodifiableList(Arrays.asList(elements));
     }
 
@@ -44,8 +44,8 @@ public final class Collect {
      * @param <E>      type of the elements
      * @return Unmodifiable set
      */
-    public static <E> Set<E> setOf(E... elements) {
-        Set<E> result = new HashSet<E>();
+    public static <E> Set<E> setOf(final E... elements) {
+        final Set<E> result = new HashSet<E>();
         Collections.addAll(result, elements);
         return Collections.unmodifiableSet(result);
     }
@@ -57,7 +57,7 @@ public final class Collect {
      * @param <E>  type of elements
      * @return Unmodifiable list of elements from iterator
      */
-    public static <E> List<E> iteratorToList(Iterator<E> iter) {
+    public static <E> List<E> iteratorToList(final Iterator<E> iter) {
         return Collections.unmodifiableList((List<? extends E>) iteratorToCollection(iter, new ArrayList<E>()));
     }
 
@@ -68,10 +68,17 @@ public final class Collect {
      * @param <E>  type of elements
      * @return Unmodifiable set of elements from iterator
      */
-    public static <E> Set<E> iteratorToSet(Iterator<E> iter) {
+    public static <E> Set<E> iteratorToSet(final Iterator<E> iter) {
         return Collections.unmodifiableSet((Set<? extends E>) iteratorToCollection(iter, new HashSet<E>()));
     }
 
+    /**
+     * Wraps {@link Enumeration} in the {@link Iterator}.
+     *
+     * @param enumeration Enumeration to wrap.
+     * @param <E>         Element type.
+     * @return Iterator wrapping supplied enumeration.
+     */
     public static <E> Iterator<E> enumerationToIterator(final Enumeration<E> enumeration) {
         return new Iterator<E>() {
 
@@ -103,7 +110,7 @@ public final class Collect {
      * @param <E>        type of elements
      * @return Same collection as passed to the function
      */
-    private static <E> Collection<E> iteratorToCollection(Iterator<E> iter, Collection<E> collection) {
+    private static <E> Collection<E> iteratorToCollection(final Iterator<E> iter, final Collection<E> collection) {
         while (iter.hasNext()) {
             collection.add(iter.next());
         }

@@ -65,9 +65,9 @@ public class Future<E> {
      *
      * @param executor {@link java.util.concurrent.ExecutorService} to be used for asynchronous execution
      */
-    public Future(ExecutorService executor) {
-        this.executor = executor == null ? DEFAULT_EXECUTOR_SERVICE : executor;
-        result = null;
+    public Future(final ExecutorService executor) {
+        this.executor = null == executor ? DEFAULT_EXECUTOR_SERVICE : executor;
+        this.result = null;
     }
 
     /**
@@ -82,7 +82,7 @@ public class Future<E> {
      * @param <E>   type of the result
      * @return Future&lt;E&gt;
      */
-    public static <E> Future<E> run(Callable<E> block) {
+    public static <E> Future<E> run(final Callable<E> block) {
         return new Future<E>().doIt(block);
     }
 
@@ -99,8 +99,8 @@ public class Future<E> {
      * @param <T>       type of the new future result
      * @return Future wrapping transform function
      */
-    public final <T> Future<T> then(Func<T, E> transform) {
-        return new ChainableFuture<T, E>(this, transform, executor);
+    public final <T> Future<T> then(final Func<T, E> transform) {
+        return new ChainableFuture<T, E>(this, transform, this.executor);
     }
 
     /**
@@ -112,12 +112,12 @@ public class Future<E> {
      * @param onSuccess {@link net.ninjacat.smooth.functions.Procedure} to handle successful Future execution
      * @return this future
      */
-    public final Future<E> onSuccess(Procedure<E> onSuccess) {
-        Validators.validateNull(successHandler, new IllegalStateException("Cannot reassign onSuccess handler"));
-        if (result != null && result.isSuccessful()) {
-            onSuccess.call(result.getValue());
+    public final Future<E> onSuccess(final Procedure<E> onSuccess) {
+        Validators.validateNull(this.successHandler, new IllegalStateException("Cannot reassign onSuccess handler"));
+        if (null != this.result && this.result.isSuccessful()) {
+            onSuccess.call(this.result.getValue());
         } else {
-            successHandler = onSuccess;
+            this.successHandler = onSuccess;
         }
         return this;
     }
@@ -131,12 +131,12 @@ public class Future<E> {
      * @param onFailure {@link net.ninjacat.smooth.functions.Procedure} to handle failed Future execution
      * @return this future
      */
-    public final Future<E> onFailure(Procedure<Throwable> onFailure) {
-        Validators.validateNull(failHandler, new IllegalStateException("Cannot reassign onFailure handler"));
-        if (result != null && !result.isSuccessful()) {
-            onFailure.call(result.getFailure());
+    public final Future<E> onFailure(final Procedure<Throwable> onFailure) {
+        Validators.validateNull(this.failHandler, new IllegalStateException("Cannot reassign onFailure handler"));
+        if (null != this.result && !this.result.isSuccessful()) {
+            onFailure.call(this.result.getFailure());
         } else {
-            failHandler = onFailure;
+            this.failHandler = onFailure;
         }
         return this;
     }
@@ -154,33 +154,33 @@ public class Future<E> {
      * @return this future
      */
     public final Future<E> doIt(final Callable<E> callable) {
-        if (executedOnce) {
+        if (this.executedOnce) {
             throw new IllegalStateException("Cannot execute more than once");
         }
-        executedOnce = true;
-        executor.submit(new Runnable() {
+        this.executedOnce = true;
+        this.executor.submit(new Runnable() {
             @Override
             public void run() {
-                result = Try.execute(callable);
-                if (result.isSuccessful()) {
-                    reportSuccess(result.getValue());
+                Future.this.result = Try.execute(callable);
+                if (Future.this.result.isSuccessful()) {
+                    reportSuccess(Future.this.result.getValue());
                 } else {
-                    reportFailure(result.getFailure());
+                    reportFailure(Future.this.result.getFailure());
                 }
             }
         });
         return this;
     }
 
-    private void reportSuccess(E value) {
-        if (successHandler != null) {
-            successHandler.call(value);
+    private void reportSuccess(final E value) {
+        if (null != this.successHandler) {
+            this.successHandler.call(value);
         }
     }
 
-    private void reportFailure(Throwable fail) {
-        if (failHandler != null) {
-            failHandler.call(fail);
+    private void reportFailure(final Throwable fail) {
+        if (null != this.failHandler) {
+            this.failHandler.call(fail);
         }
     }
 

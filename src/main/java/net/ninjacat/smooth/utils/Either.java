@@ -17,7 +17,7 @@
 package net.ninjacat.smooth.utils;
 
 /**
- * Selection of two values
+ * Selection of two values. This container can contain either the first or the second value.
  *
  * @param <F> type of first value
  * @param <S> type of second value
@@ -27,26 +27,66 @@ public abstract class Either<F, S> {
     private Either() {
     }
 
-    public static <F, S> Either<F, S> first(F val) {
+    /**
+     * Creates an new Either instance with the first value.
+     *
+     * @param val The first value.
+     * @param <F> Type of the first value.
+     * @param <S> Type of the second value.
+     * @return Either holding the first value.
+     */
+    public static <F, S> Either<F, S> first(final F val) {
         return new First<F, S>(val);
     }
 
-    public static <F, S> Either<F, S> second(S val) {
+    /**
+     * Creates an new Either instance with the second value.
+     *
+     * @param val The second value.
+     * @param <F> Type of the first value.
+     * @param <S> Type of the second value.
+     * @return Either holding the second value.
+     */
+    public static <F, S> Either<F, S> second(final S val) {
         return new Second<F, S>(val);
     }
 
+    /**
+     * Checks if this container has the first value.
+     *
+     * @return {@code true} if this is the first value.
+     */
     public abstract boolean hasFirst();
 
+    /**
+     * Checks if this container has the second value.
+     * @return {@code true} if this is the second value.
+     */
     public abstract boolean hasSecond();
 
+    /**
+     * Retrieve the first value. Will throw exception if in this instance has no first value.
+     * @return The first value.
+     * @throws java.lang.IllegalStateException if this instance has no first value.
+     */
     public abstract F getFirst();
 
+    /**
+     * Retrieve the second value. Will throw exception if in this instance has no second value.
+     * @return The second value.
+     * @throws java.lang.IllegalStateException if this instance has no second value.
+     */
     public abstract S getSecond();
 
+    /**
+     * Container that only has the first value.
+     * @param <F> Type of the first value.
+     * @param <S> Type of the second value.
+     */
     public static final class First<F, S> extends Either<F, S> {
         private final F first;
 
-        private First(F first) {
+        private First(final F first) {
             this.first = first;
         }
 
@@ -62,7 +102,7 @@ public abstract class Either<F, S> {
 
         @Override
         public F getFirst() {
-            return first;
+            return this.first;
         }
 
         @Override
@@ -71,10 +111,15 @@ public abstract class Either<F, S> {
         }
     }
 
+    /**
+     * Container that only has the second value.
+     * @param <F> Type of the first value.
+     * @param <S> Type of the second value.
+     */
     public static final class Second<F, S> extends Either<F, S> {
         private final S second;
 
-        private Second(S second) {
+        private Second(final S second) {
             this.second = second;
         }
 
@@ -95,7 +140,7 @@ public abstract class Either<F, S> {
 
         @Override
         public S getSecond() {
-            return second;
+            return this.second;
         }
     }
 }

@@ -23,18 +23,18 @@ import java.util.*;
  * to walk them all.
  */
 public class MultiIterable<T> implements Iterable<T> {
-    private List<Iterable<T>> collections;
+    private final List<Iterable<T>> collections;
 
-    public MultiIterable(Iterable<T>... iterables) {
-        collections = new ArrayList<Iterable<T>>(Arrays.asList(iterables));
+    public MultiIterable(final Iterable<T>... iterables) {
+        this.collections = new ArrayList<Iterable<T>>(Arrays.asList(iterables));
     }
 
     public MultiIterable() {
         this.collections = new ArrayList<Iterable<T>>();
     }
 
-    public void append(Iterable<T> iterable) {
-        collections.add(iterable);
+    public void append(final Iterable<T> iterable) {
+        this.collections.add(iterable);
     }
 
     @Override
@@ -44,28 +44,28 @@ public class MultiIterable<T> implements Iterable<T> {
 
     private class MultiIterator implements Iterator<T> {
 
-        private Iterator<Iterable<T>> masterIterator;
+        private final Iterator<Iterable<T>> masterIterator;
         private Iterator<T> slaveIterator;
 
         private boolean noMoreItems;
 
         private MultiIterator() {
-            masterIterator = collections.iterator();
-            noMoreItems = !moveToNextCollection();
+            this.masterIterator = MultiIterable.this.collections.iterator();
+            this.noMoreItems = !moveToNextCollection();
         }
 
         @Override
         public boolean hasNext() {
-            if (noMoreItems) {
+            if (this.noMoreItems) {
                 return false;
             }
-            if (slaveIterator.hasNext()) {
+            if (this.slaveIterator.hasNext()) {
                 return true;
             } else {
                 if (moveToNextCollection()) {
-                    return slaveIterator.hasNext();
+                    return this.slaveIterator.hasNext();
                 } else {
-                    noMoreItems = true;
+                    this.noMoreItems = true;
                     return false;
                 }
             }
@@ -74,7 +74,7 @@ public class MultiIterable<T> implements Iterable<T> {
         @Override
         public T next() {
             if (hasNext()) {
-                return slaveIterator.next();
+                return this.slaveIterator.next();
             }
             throw new NoSuchElementException();
         }
@@ -85,8 +85,8 @@ public class MultiIterable<T> implements Iterable<T> {
         }
 
         private boolean moveToNextCollection() {
-            if (masterIterator.hasNext()) {
-                slaveIterator = masterIterator.next().iterator();
+            if (this.masterIterator.hasNext()) {
+                this.slaveIterator = this.masterIterator.next().iterator();
                 return true;
             } else {
                 return false;

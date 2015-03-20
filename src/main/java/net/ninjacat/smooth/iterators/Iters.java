@@ -37,7 +37,7 @@ public final class Iters {
 
             @Override
             public boolean hasNext() {
-                return position < to;
+                return this.position < to;
             }
 
             @Override
@@ -45,8 +45,8 @@ public final class Iters {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                int result = position;
-                position += 1;
+                final int result = this.position;
+                this.position += 1;
                 return result;
             }
 
@@ -63,7 +63,7 @@ public final class Iters {
      * @param to upper bound of the range
      * @return Iterable range, see {@link #range(int, int)}
      */
-    public static Iter<Integer> range(int to) {
+    public static Iter<Integer> range(final int to) {
         return range(0, to);
     }
 
@@ -81,7 +81,7 @@ public final class Iters {
 
             @Override
             public boolean hasNext() {
-                return position < count;
+                return this.position < count;
             }
 
             @Override
@@ -89,7 +89,7 @@ public final class Iters {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                position += 1;
+                this.position += 1;
                 return value;
             }
 

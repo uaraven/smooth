@@ -16,16 +16,41 @@
 
 package net.ninjacat.smooth.functions;
 
+import java.util.concurrent.Callable;
+
 /**
  * Function of one parameter without result. Used for side-effects. Essentially a {@link Runnable} with a parameter
  */
 public abstract class Procedure<T> implements Func<Void, T> {
 
+    /**
+     * Override this method to implement procedure.
+     *
+     * @param t Parameter to procedure.
+     */
+    public abstract void call(T t);
+
     @Override
-    public final Void apply(T t) {
+    public final Void apply(final T t) {
         call(t);
         return null;
     }
 
-    public abstract void call(T t);
+    /**
+     * Converts Procedure to a {@link Callable}. As Procedure receives a parameter while Callable does not,
+     * it is required to specify this parameter at the conversion moment.
+     *
+     * @param t Parameter for this procedure.
+     * @return Callable.
+     */
+    public Callable<Void> asCallable(final T t) {
+        return new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                Procedure.this.call(t);
+                return null;
+            }
+        };
+    }
+
 }

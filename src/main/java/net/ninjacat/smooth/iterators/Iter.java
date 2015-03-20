@@ -37,11 +37,11 @@ import java.util.*;
 public class Iter<E> implements Iterable<E> {
     private final Iterator<E> iterator;
 
-    Iter(Iterator<E> c) {
-        iterator = c;
+    Iter(final Iterator<E> iterator) {
+        this.iterator = iterator;
     }
 
-    public static <E> Iter<E> of(Enumeration<E> enumeration) {
+    public static <E> Iter<E> of(final Enumeration<E> enumeration) {
         return new Iter<E>(Collect.enumerationToIterator(enumeration));
     }
 
@@ -53,7 +53,7 @@ public class Iter<E> implements Iterable<E> {
      * @param <E>  type of elements in the collection
      * @return Rich iterator over collection elements
      */
-    public static <E> Iter<E> of(Collection<E> coll) {
+    public static <E> Iter<E> of(final Collection<E> coll) {
         return new Iter<E>(coll.iterator());
     }
 
@@ -68,7 +68,7 @@ public class Iter<E> implements Iterable<E> {
      * @param <E>  type of elements in the collection
      * @return Rich iterator wrapped around Java iterator
      */
-    public static <E> Iter<E> of(Iterator<E> iter) {
+    public static <E> Iter<E> of(final Iterator<E> iter) {
         return new Iter<E>(iter);
     }
 
@@ -84,7 +84,7 @@ public class Iter<E> implements Iterable<E> {
      * @param <E>  type of elements
      * @return Rich iterator for array elements
      */
-    public static <E> Iter<E> of(E... data) {
+    public static <E> Iter<E> of(final E... data) {
         return Iter.of(Arrays.asList(data));
     }
 
@@ -92,14 +92,14 @@ public class Iter<E> implements Iterable<E> {
      * @return {@link java.util.List} containing all the items from this iterator. Returned list is immutable
      */
     public List<E> toList() {
-        return Collect.iteratorToList(iterator);
+        return Collect.iteratorToList(this.iterator);
     }
 
     /**
      * @return {@link java.util.Set} containing all the items from this iterator. Returned list is immutable
      */
     public Set<E> toSet() {
-        return Collect.iteratorToSet(iterator);
+        return Collect.iteratorToSet(this.iterator);
     }
 
 
@@ -119,7 +119,7 @@ public class Iter<E> implements Iterable<E> {
      *              a new array of the same runtime type is allocated for this purpose.
      * @return an array containing the elements of this iterable
      */
-    public E[] toArray(E[] array) {
+    public E[] toArray(final E[] array) {
         return toList().toArray(array);
     }
 
@@ -138,12 +138,12 @@ public class Iter<E> implements Iterable<E> {
 
                     @Override
                     public boolean hasNext() {
-                        return iterator.hasNext();
+                        return Iter.this.iterator.hasNext();
                     }
 
                     @Override
                     public R next() {
-                        return func.apply(iterator.next());
+                        return func.apply(Iter.this.iterator.next());
                     }
 
                     @Override
@@ -158,9 +158,9 @@ public class Iter<E> implements Iterable<E> {
      *
      * @param executor {@link Procedure} to be executed on each element of iterable
      */
-    public void forEach(Procedure<E> executor) {
-        while (iterator.hasNext()) {
-            executor.call(iterator.next());
+    public void forEach(final Procedure<E> executor) {
+        while (this.iterator.hasNext()) {
+            executor.call(this.iterator.next());
         }
     }
 
@@ -172,10 +172,10 @@ public class Iter<E> implements Iterable<E> {
      * @param <R>      type of the resulting value
      * @return Value of the left-folded collection
      */
-    public <R> R reduce(R starting, Function2<R, R, E> f) {
+    public <R> R reduce(final R starting, final Function2<R, R, E> f) {
         R result = starting;
-        while (iterator.hasNext()) {
-            result = f.apply(result, iterator.next());
+        while (this.iterator.hasNext()) {
+            result = f.apply(result, this.iterator.next());
         }
         return result;
 
@@ -194,8 +194,8 @@ public class Iter<E> implements Iterable<E> {
             @Override
             public R get() {
                 R result = starting;
-                while (iterator.hasNext()) {
-                    result = f.apply(result, iterator.next());
+                while (Iter.this.iterator.hasNext()) {
+                    result = f.apply(result, Iter.this.iterator.next());
                 }
                 return result;
             }
@@ -214,25 +214,26 @@ public class Iter<E> implements Iterable<E> {
         return new Iter<E>(new Iterator<E>() {
             private E nextValue;
 
+            @Override
             public boolean hasNext() {
-                if (nextValue != null) {
+                if (null != this.nextValue) {
                     return true;
                 }
-                while (iterator.hasNext()) {
-                    nextValue = iterator.next();
-                    if (predicate.matches(nextValue)) {
+                while (Iter.this.iterator.hasNext()) {
+                    this.nextValue = Iter.this.iterator.next();
+                    if (predicate.matches(this.nextValue)) {
                         return true;
                     }
                 }
-                nextValue = null;
+                this.nextValue = null;
                 return false;
             }
 
             @Override
             public E next() {
-                if (nextValue != null) {
-                    E result = nextValue;
-                    nextValue = null;
+                if (null != this.nextValue) {
+                    final E result = this.nextValue;
+                    this.nextValue = null;
                     return result;
                 }
                 throw new NoSuchElementException();
@@ -252,9 +253,9 @@ public class Iter<E> implements Iterable<E> {
      * @param defaultValue default value that will be returned if none of the elements in the iterator matches predicate
      * @return Element found or of the default value
      */
-    public E find(Predicate<E> matcher, E defaultValue) {
-        while (iterator.hasNext()) {
-            E next = iterator.next();
+    public E find(final Predicate<E> matcher, final E defaultValue) {
+        while (this.iterator.hasNext()) {
+            final E next = this.iterator.next();
             if (matcher.matches(next)) {
                 return next;
             }
@@ -273,8 +274,8 @@ public class Iter<E> implements Iterable<E> {
         return new Promise<E>() {
             @Override
             public E get() {
-                while (iterator.hasNext()) {
-                    E next = iterator.next();
+                while (Iter.this.iterator.hasNext()) {
+                    final E next = Iter.this.iterator.next();
                     if (matcher.matches(next)) {
                         return next;
                     }
@@ -291,9 +292,9 @@ public class Iter<E> implements Iterable<E> {
      * @param matcher - {@link Predicate} to check elements
      * @return {@code true} if all elements match predicate or {@code false} otherwise
      */
-    public boolean all(Predicate<E> matcher) {
-        while (iterator.hasNext()) {
-            if (!matcher.matches(iterator.next())) {
+    public boolean all(final Predicate<E> matcher) {
+        while (this.iterator.hasNext()) {
+            if (!matcher.matches(this.iterator.next())) {
                 return false;
             }
         }
@@ -306,9 +307,9 @@ public class Iter<E> implements Iterable<E> {
      * @param matcher - {@link Predicate} to check elements
      * @return {@code true} if any of the elements match predicate or {@code false} otherwise
      */
-    public boolean any(Predicate<E> matcher) {
-        while (iterator.hasNext()) {
-            if (matcher.matches(iterator.next())) {
+    public boolean any(final Predicate<E> matcher) {
+        while (this.iterator.hasNext()) {
+            if (matcher.matches(this.iterator.next())) {
                 return true;
             }
         }
@@ -317,7 +318,7 @@ public class Iter<E> implements Iterable<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return iterator;
+        return this.iterator;
     }
 
     /**
@@ -326,10 +327,10 @@ public class Iter<E> implements Iterable<E> {
      * @param separator string to separate elements
      * @return String
      */
-    public String mkStr(String separator) {
-        StringBuilder builder = new StringBuilder();
-        while (iterator.hasNext()) {
-            builder.append(iterator.next().toString()).append(separator);
+    public String mkStr(final String separator) {
+        final StringBuilder builder = new StringBuilder();
+        while (this.iterator.hasNext()) {
+            builder.append(this.iterator.next().toString()).append(separator);
         }
         builder.setLength(builder.length() - separator.length());
         return builder.toString();
@@ -341,7 +342,7 @@ public class Iter<E> implements Iterable<E> {
      * @param collector {@link Collector} which will perform collection
      * @return {@link Collection} of all the elements in this iterable
      */
-    public Collection<E> collectWith(Collector<E> collector) {
+    public Collection<E> collectWith(final Collector<E> collector) {
         return collector.collect(this);
     }
 

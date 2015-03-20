@@ -1,5 +1,7 @@
 package net.ninjacat.smooth.collections;
 
+import net.ninjacat.smooth.utils.Pair;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,14 +27,37 @@ public final class Maps {
      * @param <V>   Type of values
      * @return Map&lt;K,V&gt; of supplied key-value pairs
      */
-    public static <K, V> Map<K, V> of(Object... pairs) {
+    public static <K, V> Map<K, V> of(final Object... pairs) {
         if (pairs.length % 2 != 0) {
             throw new IllegalArgumentException("Initializer should have even number of elements");
         }
-        Map<K, V> map = new HashMap<K, V>();
+        final Map<K, V> map = new HashMap<K, V>();
 
         for (int i = 0; i < pairs.length; i += 2) {
             map.put((K) pairs[i], (V) pairs[i + 1]);
+        }
+
+        return map;
+    }
+
+    /**
+     * <p>
+     * Will create map, give list of key-value pairs.
+     * </p>
+     * <p>
+     * Pairs are represented by {@link Pair} objects where left is used as key and right is used for value.
+     * </p>
+     *
+     * @param pairs list of key-value pairs.
+     * @param <K>   Type of keys
+     * @param <V>   Type of values
+     * @return Map&lt;K,V&gt; of supplied key-value pairs
+     */
+    public static <K, V> Map<K, V> of(final Pair<K, V>... pairs) {
+        final Map<K, V> map = new HashMap<K, V>();
+
+        for (final Pair<K, V> pair : pairs) {
+            map.put(pair.getLeft(), pair.getRight());
         }
 
         return map;

@@ -37,24 +37,24 @@ public abstract class Try<T> {
      * @return Either {@link Try.Success} if execution was successful or {@link Try.Failure} if
      * execution has thrown the exception.
      */
-    public static <T> Try<T> execute(Callable<T> code) {
+    public static <T> Try<T> execute(final Callable<T> code) {
         try {
             return new Success<T>(code.call());
-        } catch (Throwable thr) {
+        } catch (final Throwable thr) {
             return new Failure<T>(thr);
         }
     }
 
     /**
      * <p>Executes unary function</p>
-     * <p>Usage:<br> <code>Try.execute(function).with(42);</code></p>
+     * <p>Usage:<br> {@code Try.execute(function).with(42);}</p>
      *
      * @param func function to be executed
      * @param <P>  type of parameter
      * @param <T>  type of result
      * @return delayed function execution which can be executed by supplying it with parameter.
      */
-    public static <P, T> FunctionExecutor<T, P> execute(Func<T, P> func) {
+    public static <P, T> FunctionExecutor<T, P> execute(final Func<T, P> func) {
         return new FunctionExecutor<T, P>(func);
     }
 
@@ -84,7 +84,7 @@ public abstract class Try<T> {
      * Usage example:
      * <blockquote>
      * <code>
-     * Try&lt;Integer&gt; result = Try.execute(DeepThought).with("What is the answer to the ultimate question?").map(interpretAnswer);
+     * Try&lt;Integer&gt; result = Try.execute(DeepThought).with("What is the answer to the ultimate question?").then(interpretAnswer);
      * </code>
      * </blockquote>
      * This code will execute function DeepThough which accepts string as a parameter and then pass its result to function interpretAnswer, which
@@ -98,11 +98,25 @@ public abstract class Try<T> {
      * @param <S>    type of returning value of mapper function
      * @return result of execution of mapper function wrapped in Try
      */
-    public <S> Try<S> map(Func<S, T> mapper) {
+    public <S> Try<S> then(final Func<S, T> mapper) {
         if (isSuccessful()) {
             return Try.execute(mapper).with(getValue());
         } else {
             return new Failure<S>(getFailure());
+        }
+    }
+
+    /**
+     * Retrieves result of computation from Try wrapped in {@link Option}.
+     * If execution was successful it will return it, otherwise {@link Option#absent()} will be returned.
+     *
+     * @return Optional result of computation.
+     */
+    public Option<T> get() {
+        if (isSuccessful()) {
+            return Option.of(getValue());
+        } else {
+            return Option.absent();
         }
     }
 
@@ -114,7 +128,7 @@ public abstract class Try<T> {
     static final class Success<T> extends Try<T> {
         private final T value;
 
-        Success(T value) {
+        Success(final T value) {
             this.value = value;
         }
 
@@ -125,7 +139,7 @@ public abstract class Try<T> {
 
         @Override
         public T getValue() {
-            return value;
+            return this.value;
         }
 
         @Override
@@ -142,13 +156,13 @@ public abstract class Try<T> {
     static final class Failure<T> extends Try<T> {
         private final Throwable failure;
 
-        Failure(Throwable failure) {
+        Failure(final Throwable failure) {
             this.failure = failure;
         }
 
         @Override
         public Throwable getFailure() {
-            return failure;
+            return this.failure;
         }
 
         @Override
@@ -162,17 +176,24 @@ public abstract class Try<T> {
         }
     }
 
+    /**
+     * Delayed function executor. Allows to supply parameter to function before it is executed inside
+     * {@link Try}.
+     *
+     * @param <R> Function result type.
+     * @param <P> Function parameter type.
+     */
     public static final class FunctionExecutor<R, P> {
         private final Func<R, P> function;
 
-        private FunctionExecutor(Func<R, P> function) {
+        private FunctionExecutor(final Func<R, P> function) {
             this.function = function;
         }
 
-        public Try<R> with(P parameter) {
+        public Try<R> with(final P parameter) {
             try {
-                return new Success<R>(function.apply(parameter));
-            } catch (Throwable thr) {
+                return new Success<R>(this.function.apply(parameter));
+            } catch (final Throwable thr) {
                 return new Failure<R>(thr);
             }
         }

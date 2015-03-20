@@ -16,71 +16,124 @@
 
 package net.ninjacat.smooth.utils;
 
+import net.ninjacat.smooth.functions.Func;
+
 /**
  * An immutable object that contains either a non-null reference to another object or contains nothing, i.e. absent.
  * It is never {@code null}.
  *
  * @param <T> - type of wrapped value
  */
+@SuppressWarnings("unchecked")
 public class Option<T> {
 
     private static final Option<?> ABSENT = new Option(null);
 
     private final T ref;
 
-    Option(T ref) {
+    Option(final T ref) {
         this.ref = ref;
     }
 
+    /**
+     * Creates a new option that does not hold any value.
+     *
+     * @param <T> Type of optional value.
+     * @return A new empty optional value.
+     */
     public static <T> Option<T> absent() {
         return (Option<T>) ABSENT;
     }
 
-    public static <T> Option<T> of(T value) {
+    /**
+     * Creates a new option from supplied value. Value can be null.
+     *
+     * @param value Value to wrap into Option
+     * @param <T>   Type of optional value.
+     * @return A new optional value.
+     */
+    public static <T> Option<T> of(final T value) {
         return new Option<T>(value);
     }
 
+    /**
+     * @return {@code true} if this Option is not absent, or {@code false} otherwise.
+     */
     public boolean isPresent() {
-        return ref != null;
+        return null != this.ref;
     }
 
-    public T or(T alternative) {
-        return isPresent() ? ref : alternative;
+    /**
+     * Returns wrapped value, if this Option is not absent or supplied alternative otherwise.
+     *
+     * @param alternative Alternative value to return if this Option is absent.
+     * @return Wrapped value.
+     */
+    public T or(final T alternative) {
+        return isPresent() ? this.ref : alternative;
     }
 
+    /**
+     * @return Wrapped value or null if this Option is absent.
+     */
     public T orNull() {
-        return isPresent() ? ref : null;
+        return isPresent() ? this.ref : null;
     }
 
+    /**
+     * Retrieves wrapped value. If this Option is empty, then {@link NullPointerException} will be thrown.
+     *
+     * @return Wrapped value.
+     * @throws java.lang.NullPointerException if Option is empty.
+     */
     public T get() {
-        if (ref == null) {
-            throw new IllegalStateException("No value");
+        if (null == this.ref) {
+            throw new NullPointerException("No value");
         } else {
-            return ref;
+            return this.ref;
+        }
+    }
+
+    /**
+     * If this option is not empty, its value is transformed with the given Function; otherwise, absent() is returned.
+     * Function is permitted to return null, in this case absent() will be returned.
+     * <p>
+     * If function throws exception, absent() will be returned.
+     * </p>
+     *
+     * @param transform Function {@link Func} to transform value from one type to another.
+     * @param <K>       Type of the new value
+     * @return Optional value (or absent Option).
+     */
+    public <K> Option<K> map(final Func<K, T> transform) {
+        if (isPresent()) {
+            return Try.execute(transform).with(this.ref).get();
+        } else {
+            return Option.absent();
         }
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (null == o || getClass() != o.getClass()) return false;
 
-        Option option = (Option) o;
+        final Option option = (Option) o;
 
-        if (ref != null ? !ref.equals(option.ref) : option.ref != null) return false;
+        if (null != this.ref ? !this.ref.equals(option.ref) : null != option.ref) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return ref != null ? ref.hashCode() : 0;
+        return null != this.ref ? this.ref.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         if (isPresent()) {
-            return "Option{" + ref + '}';
+            return "Option{" + this.ref + '}';
         } else {
             return "Option{ absent }";
         }

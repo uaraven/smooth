@@ -27,12 +27,12 @@ import java.util.*;
 public class LazyIter<E> implements Iterable<E> {
     private final Iter<E> collection;
 
-    private LazyIter(Iterable<E> c) {
-        collection = new Iter<E>(c.iterator());
+    private LazyIter(final Iterable<E> iterable) {
+        this.collection = new Iter<E>(iterable.iterator());
     }
 
-    private LazyIter(Iterator<E> c) {
-        collection = new Iter<E>(c);
+    private LazyIter(final Iterator<E> iterable) {
+        this.collection = new Iter<E>(iterable);
     }
 
     /**
@@ -42,12 +42,12 @@ public class LazyIter<E> implements Iterable<E> {
      * @param <E>  type of collection elements
      * @return new lazy iterable
      */
-    public static <E> LazyIter<E> of(Collection<E> coll) {
+    public static <E> LazyIter<E> of(final Collection<E> coll) {
         return new LazyIter<E>(Collections.unmodifiableCollection(coll));
     }
 
-    public static <E> LazyIter<E> of(E head, Collection<E> tail) {
-        List<E> holder = new ArrayList<E>(tail.size() + 1);
+    public static <E> LazyIter<E> of(final E head, final Collection<E> tail) {
+        final List<E> holder = new ArrayList<E>(tail.size() + 1);
         holder.add(head);
         holder.addAll(tail);
         return new LazyIter<E>(holder);
@@ -60,7 +60,7 @@ public class LazyIter<E> implements Iterable<E> {
      * @param <E>  type of elements
      * @return new lazy iterable
      */
-    public static <E> LazyIter<E> of(E... data) {
+    public static <E> LazyIter<E> of(final E... data) {
         return of(Arrays.asList(data));
     }
 
@@ -70,7 +70,7 @@ public class LazyIter<E> implements Iterable<E> {
      * @return {@link List} containing all the items from this collection. Returned list is immutable
      */
     public List<E> toList() {
-        return Collect.iteratorToList(collection.iterator());
+        return Collect.iteratorToList(this.collection.iterator());
     }
 
     /**
@@ -79,7 +79,7 @@ public class LazyIter<E> implements Iterable<E> {
      * @return {@link Set} containing all the items from this collection. Returned list is immutable
      */
     public Set<E> toSet() {
-        return Collect.iteratorToSet(collection.iterator());
+        return Collect.iteratorToSet(this.collection.iterator());
     }
 
     /**
@@ -94,7 +94,7 @@ public class LazyIter<E> implements Iterable<E> {
      * @return array of the elements from this iterable.
      * @throws ArrayStoreException if the type of an element in this List cannot be stored in the type of the specified array.
      */
-    public E[] toArray(E[] array) {
+    public E[] toArray(final E[] array) {
         return toList().toArray(array);
     }
 
@@ -104,7 +104,7 @@ public class LazyIter<E> implements Iterable<E> {
      * @return An Iterator instance.
      */
     public Iterator<E> iterator() {
-        return collection.iterator();
+        return this.collection.iterator();
     }
 
     /**
@@ -116,8 +116,8 @@ public class LazyIter<E> implements Iterable<E> {
      * @param <R>  result type
      * @return Iterable collection of mapped values
      */
-    public <R> LazyIter<R> map(Func<R, E> func) {
-        return new LazyIter<R>(collection.map(func));
+    public <R> LazyIter<R> map(final Func<R, E> func) {
+        return new LazyIter<R>(this.collection.map(func));
     }
 
     /**
@@ -132,7 +132,7 @@ public class LazyIter<E> implements Iterable<E> {
         return new Promise<R>() {
             @Override
             public R get() {
-                return collection.reduce(starting, f);
+                return LazyIter.this.collection.reduce(starting, f);
             }
         };
     }
@@ -145,8 +145,8 @@ public class LazyIter<E> implements Iterable<E> {
      * @return {@link Iterable} collection. This function will not create resulting collection immediately, instead next
      * element will be evaluated when requested with {@link java.util.Iterator#next()}
      */
-    public LazyIter<E> filter(Predicate<E> predicate) {
-        return new LazyIter<E>(collection.filter(predicate));
+    public LazyIter<E> filter(final Predicate<E> predicate) {
+        return new LazyIter<E>(this.collection.filter(predicate));
     }
 
     /**
@@ -156,7 +156,7 @@ public class LazyIter<E> implements Iterable<E> {
      * @throws NoSuchElementException if collection is empty
      */
     public E head() {
-        return collection.iterator().next();
+        return this.collection.iterator().next();
     }
 
     /**
@@ -166,7 +166,7 @@ public class LazyIter<E> implements Iterable<E> {
      * @throws NoSuchElementException if collection is empty
      */
     public LazyIter<E> tail() {
-        Iterator<E> iter = collection.iterator();
+        final Iterator<E> iter = this.collection.iterator();
         iter.next();
         return new LazyIter<E>(iter);
     }
@@ -182,7 +182,7 @@ public class LazyIter<E> implements Iterable<E> {
         return new Promise<E>() {
             @Override
             public E get() {
-                return collection.find(matcher, defaultValue);
+                return LazyIter.this.collection.find(matcher, defaultValue);
             }
         };
     }
@@ -197,7 +197,7 @@ public class LazyIter<E> implements Iterable<E> {
         return new Promise<Boolean>() {
             @Override
             public Boolean get() {
-                return collection.all(matcher);
+                return LazyIter.this.collection.all(matcher);
             }
         };
     }
@@ -212,7 +212,7 @@ public class LazyIter<E> implements Iterable<E> {
         return new Promise<Boolean>() {
             @Override
             public Boolean get() {
-                return collection.any(matcher);
+                return LazyIter.this.collection.any(matcher);
             }
         };
     }

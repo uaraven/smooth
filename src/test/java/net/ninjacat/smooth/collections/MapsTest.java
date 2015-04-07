@@ -1,8 +1,10 @@
 package net.ninjacat.smooth.collections;
 
+import net.ninjacat.smooth.functions.Func;
 import net.ninjacat.smooth.utils.Pair;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,5 +28,22 @@ public class MapsTest {
         assertThat(map.get(1), is("first"));
         assertThat(map.get(2), is("second"));
         assertThat(map.size(), is(2));
+    }
+
+    @Test
+    public void shouldCreateMapFromIterableWithKeyGenerator() throws Exception {
+        final List<String> list = Lists.of("1", "2");
+
+        final Map<Integer, String> map = Maps.toMap(list, new Func<Integer, String>() {
+            @Override
+            public Integer apply(final String s) {
+                return Integer.parseInt(s);
+            }
+        });
+
+        assertThat(map.get(1), is("1"));
+        assertThat(map.get(2), is("2"));
+        assertThat(map.size(), is(2));
+
     }
 }

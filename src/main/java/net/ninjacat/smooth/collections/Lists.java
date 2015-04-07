@@ -26,17 +26,20 @@ import java.util.List;
 
 public final class Lists {
 
-    public static <E, R> List<R> map(List<E> list, Func<R, E> mapFunc) {
-        List<R> result = new ArrayList<R>(list.size());
-        for (E e : list) {
+    private Lists() {
+    }
+
+    public static <E, R> List<R> map(final List<E> list, final Func<R, E> mapFunc) {
+        final List<R> result = new ArrayList<R>(list.size());
+        for (final E e : list) {
             result.add(mapFunc.apply(e));
         }
         return Collections.unmodifiableList(result);
     }
 
-    public static <E> List<E> filter(List<E> list, Predicate<E> filterFunc) {
-        List<E> result = new ArrayList<E>();
-        for (E e : list) {
+    public static <E> List<E> filter(final List<E> list, final Predicate<E> filterFunc) {
+        final List<E> result = new ArrayList<E>();
+        for (final E e : list) {
             if (filterFunc.matches(e)) {
                 result.add(e);
             }
@@ -44,7 +47,7 @@ public final class Lists {
         return Collections.unmodifiableList(result);
     }
 
-    public static <T> List<T> of(T... elements) {
+    public static <T> List<T> of(final T... elements) {
         return Arrays.asList(elements);
     }
 }

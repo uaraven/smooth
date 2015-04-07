@@ -19,6 +19,9 @@ package net.ninjacat.smooth.iterators;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Iterable utility methods.
+ */
 public final class Iters {
 
     private Iters() {
@@ -29,7 +32,7 @@ public final class Iters {
      *
      * @param from starting value
      * @param to   upper bound
-     * @return rich iterator {@link net.ninjacat.smooth.iterators.Iter}
+     * @return rich iterator {@link Iter}
      */
     public static Iter<Integer> range(final int from, final int to) {
         return Iter.of(new Iterator<Integer>() {

@@ -32,30 +32,30 @@ public class IterTest {
 
     @Test
     public void toListShouldReturnOriginalList() throws Exception {
-        List<String> original = Arrays.asList("1", "1", "Last");
-        List<String> result = Iter.of(original).toList();
+        final List<String> original = Arrays.asList("1", "1", "Last");
+        final List<String> result = Iter.of(original).toList();
 
         assertThat(result, is(original));
     }
 
     @Test
     public void toSetShouldReturnOnlyUniqueElements() throws Exception {
-        List<String> original = Arrays.asList("1", "1", "Last");
-        Set<String> result = Iter.of(original).toSet();
+        final List<String> original = Arrays.asList("1", "1", "Last");
+        final Set<String> result = Iter.of(original).toSet();
 
         assertThat(result, CoreMatchers.is(Collect.setOf("1", "Last")));
     }
 
     @Test
     public void mapShouldTransformValues() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
-        Iterable<Integer> transformed = iter.map(new Func<Integer, Integer>() {
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
+        final Iterable<Integer> transformed = iter.map(new Func<Integer, Integer>() {
             @Override
-            public Integer apply(Integer integer) {
+            public Integer apply(final Integer integer) {
                 return integer * 2;
             }
         });
-        Iterator<Integer> iterator = transformed.iterator();
+        final Iterator<Integer> iterator = transformed.iterator();
         IterFixtures.verifyNext(iterator, 2);
         IterFixtures.verifyNext(iterator, 4);
         IterFixtures.verifyNext(iterator, 6);
@@ -64,13 +64,13 @@ public class IterTest {
 
     @Test
     public void mapShouldBeLazy() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
 
         final IterFixtures.SideEffect sideEffect = new IterFixtures.SideEffect();
 
         iter.map(new Func<Integer, Integer>() {
             @Override
-            public Integer apply(Integer integer) {
+            public Integer apply(final Integer integer) {
                 sideEffect.sideEffect();
                 return integer * 2;
             }
@@ -80,14 +80,14 @@ public class IterTest {
 
     @Test
     public void filterShouldReturnOddValues() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
-        Iterable<Integer> filtered = iter.filter(new Predicate<Integer>() {
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
+        final Iterable<Integer> filtered = iter.filter(new Predicate<Integer>() {
             @Override
-            public boolean matches(Integer integer) {
-                return integer % 2 != 0;
+            public boolean matches(final Integer integer) {
+                return 0 != integer % 2;
             }
         });
-        Iterator<Integer> iterator = filtered.iterator();
+        final Iterator<Integer> iterator = filtered.iterator();
         IterFixtures.verifyNext(iterator, 1);
         IterFixtures.verifyNext(iterator, 3);
         IterFixtures.verifyNoNext(iterator);
@@ -95,15 +95,15 @@ public class IterTest {
 
     @Test
     public void filterShouldBeLazy() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3));
 
         final IterFixtures.SideEffect sideEffect = new IterFixtures.SideEffect();
 
         iter.filter(new Predicate<Integer>() {
             @Override
-            public boolean matches(Integer integer) {
+            public boolean matches(final Integer integer) {
                 sideEffect.sideEffect();
-                return integer % 2 != 0;
+                return 0 != integer % 2;
             }
         });
 
@@ -113,11 +113,11 @@ public class IterTest {
 
     @Test
     public void reduceShouldFoldLeft() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
 
-        int result = iter.reduce(0, new Function2<Integer, Integer, Integer>() {
+        final int result = iter.reduce(0, new Function2<Integer, Integer, Integer>() {
             @Override
-            public Integer apply(Integer integer, Integer integer2) {
+            public Integer apply(final Integer integer, final Integer integer2) {
                 return integer + integer2;
             }
         });
@@ -127,11 +127,11 @@ public class IterTest {
 
     @Test
     public void lazyReduceShouldFoldLeft() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
 
-        Promise<Integer> result = iter.lazyReduce(0, new Function2<Integer, Integer, Integer>() {
+        final Promise<Integer> result = iter.lazyReduce(0, new Function2<Integer, Integer, Integer>() {
             @Override
-            public Integer apply(Integer integer, Integer integer2) {
+            public Integer apply(final Integer integer, final Integer integer2) {
                 return integer + integer2;
             }
         });
@@ -141,13 +141,13 @@ public class IterTest {
 
     @Test
     public void lazyReduceShouldBeLazy() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
 
         final IterFixtures.SideEffect sideEffect = new IterFixtures.SideEffect();
 
         iter.lazyReduce(0, new Function2<Integer, Integer, Integer>() {
             @Override
-            public Integer apply(Integer integer, Integer integer2) {
+            public Integer apply(final Integer integer, final Integer integer2) {
                 sideEffect.sideEffect();
                 return integer + integer2;
             }
@@ -158,12 +158,12 @@ public class IterTest {
 
     @Test
     public void forEachShouldIterateOverAllElements() throws Exception {
-        Iter<Integer> iter = Iter.of(1, 2, 3, 4);
+        final Iter<Integer> iter = Iter.of(1, 2, 3, 4);
 
         final int[] sum = {0};
         iter.forEach(new Procedure<Integer>() {
             @Override
-            public void call(Integer integer) {
+            public void call(final Integer integer) {
                 sum[0] = sum[0] + integer;
             }
         });
@@ -173,11 +173,11 @@ public class IterTest {
 
     @Test
     public void findShouldBeAbleToLocateElement() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
 
-        Integer result = iter.find(new Predicate<Integer>() {
+        final Integer result = iter.find(new Predicate<Integer>() {
             @Override
-            public boolean matches(Integer integer) {
+            public boolean matches(final Integer integer) {
                 return integer.equals(3);
             }
         }, -1);
@@ -187,11 +187,11 @@ public class IterTest {
 
     @Test
     public void findShouldReturnDefaultValueIfElementNotFound() throws Exception {
-        Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
+        final Iter<Integer> iter = Iter.of(Arrays.asList(1, 2, 3, 4));
 
-        Integer result = iter.find(new Predicate<Integer>() {
+        final Integer result = iter.find(new Predicate<Integer>() {
             @Override
-            public boolean matches(Integer integer) {
+            public boolean matches(final Integer integer) {
                 return integer.equals(5);
             }
         }, -1);
@@ -201,13 +201,13 @@ public class IterTest {
 
     @Test
     public void lazyFindShouldBeLazy() throws Exception {
-        Iter<Integer> iter = Iter.of(1, 2);
+        final Iter<Integer> iter = Iter.of(1, 2);
 
         final SideEffect sideEffect = new SideEffect();
 
         iter.lazyFind(new Predicate<Integer>() {
             @Override
-            public boolean matches(Integer integer) {
+            public boolean matches(final Integer integer) {
                 sideEffect.sideEffect();
                 return integer.equals(3);
             }
@@ -218,13 +218,13 @@ public class IterTest {
 
     @Test
     public void shouldFindDataWhenDoingLazySearch() throws Exception {
-        Iter<Integer> iter = Iter.of(1, 2, 3, 4);
+        final Iter<Integer> iter = Iter.of(1, 2, 3, 4);
 
         final SideEffect sideEffect = new SideEffect();
 
-        Integer result = iter.lazyFind(new Predicate<Integer>() {
+        final Integer result = iter.lazyFind(new Predicate<Integer>() {
             @Override
-            public boolean matches(Integer integer) {
+            public boolean matches(final Integer integer) {
                 sideEffect.sideEffect();
                 return integer.equals(3);
             }
@@ -236,11 +236,11 @@ public class IterTest {
 
     @Test
     public void anyShouldReturnTrueIfAnyMatchingElementFound() throws Exception {
-        Iter<String> iter = Iter.of("First", "Middle", "Last");
+        final Iter<String> iter = Iter.of("First", "Middle", "Last");
 
-        boolean result = iter.any(new Predicate<String>() {
+        final boolean result = iter.any(new Predicate<String>() {
             @Override
-            public boolean matches(String o) {
+            public boolean matches(final String o) {
                 return o.startsWith("M");
             }
         });
@@ -250,11 +250,11 @@ public class IterTest {
 
     @Test
     public void anyShouldReturnFalseIfNoMatchingElementFound() throws Exception {
-        Iter<String> iter = Iter.of("First", "Middle", "Last");
+        final Iter<String> iter = Iter.of("First", "Middle", "Last");
 
-        boolean result = iter.any(new Predicate<String>() {
+        final boolean result = iter.any(new Predicate<String>() {
             @Override
-            public boolean matches(String o) {
+            public boolean matches(final String o) {
                 return o.startsWith("S");
             }
         });
@@ -264,11 +264,11 @@ public class IterTest {
 
     @Test
     public void allShouldReturnTrueIfAllElementsMatchPredicate() throws Exception {
-        Iter<String> iter = Iter.of("Mary", "Molly", "Maria");
+        final Iter<String> iter = Iter.of("Mary", "Molly", "Maria");
 
-        boolean result = iter.all(new Predicate<String>() {
+        final boolean result = iter.all(new Predicate<String>() {
             @Override
-            public boolean matches(String o) {
+            public boolean matches(final String o) {
                 return o.startsWith("M");
             }
         });
@@ -278,11 +278,11 @@ public class IterTest {
 
     @Test
     public void allShouldReturnFalseIfAtLeastOneElementDoesNotMatchPredicate() throws Exception {
-        Iter<String> iter = Iter.of("Mary", "Molly", "Jenny");
+        final Iter<String> iter = Iter.of("Mary", "Molly", "Jenny");
 
-        boolean result = iter.all(new Predicate<String>() {
+        final boolean result = iter.all(new Predicate<String>() {
             @Override
-            public boolean matches(String o) {
+            public boolean matches(final String o) {
                 return o.startsWith("M");
             }
         });
@@ -292,19 +292,46 @@ public class IterTest {
 
     @Test
     public void shouldCreateStringWithDelimiters() throws Exception {
-        Iter<Integer> iter = Iter.of(1, 2, 3);
+        final Iter<Integer> iter = Iter.of(1, 2, 3);
 
-        String result = iter.mkStr("->");
+        final String result = iter.mkStr("->");
 
         assertThat("Should create string with separators", result, is("1->2->3"));
     }
 
     @Test
     public void shouldCollectElements() throws Exception {
-        Iter<Integer> iter = Iter.of(1, 2, 3);
+        final Iter<Integer> iter = Iter.of(1, 2, 3);
 
-        Collection<Integer> collection = iter.collectWith(Collectors.<Integer>arrayList());
+        final Collection<Integer> collection = iter.collectWith(Collectors.<Integer>arrayList());
 
         assertThat("should contain elements from iterable", collection, hasItems(1, 2, 3));
+    }
+
+
+    @Test
+    public void shouldConvertIterableToArray() throws Exception {
+        final Iter<Integer> iter = Iter.of(1, 2);
+
+        final Integer[] array = iter.toArray(Integer.class);
+
+        assertThat("should create array of correct size", array.length, is(2));
+        assertThat("array should contain elements from iterable", array, is(new Integer[]{1, 2}));
+    }
+
+    @Test
+    public void shouldConvertIterToMap() throws Exception {
+        final Iter<String> iter = Iter.of("1", "2");
+
+        final Map<Integer, String> map = iter.toMap(new Func<Integer, String>() {
+            @Override
+            public Integer apply(final String s) {
+                return Integer.parseInt(s);
+            }
+        });
+
+        assertThat("Generated map should contain pair 1->'1'", map.get(1), is("1"));
+        assertThat("Generated map should contain pair 2->'2'", map.get(2), is("2"));
+        assertThat("Generated map should contain two elements", map.size(), is(2));
     }
 }

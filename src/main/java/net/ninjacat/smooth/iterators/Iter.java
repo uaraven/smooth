@@ -17,16 +17,18 @@
 package net.ninjacat.smooth.iterators;
 
 import net.ninjacat.smooth.collections.Collect;
+import net.ninjacat.smooth.collections.Maps;
 import net.ninjacat.smooth.functions.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
  * <p>Functional style immutable rich iterator</p>
  * <p/>
- * <p>Main difference from standard {@link java.util.Iterator} is that this iterator allows functions to be applied to the elements.
- * It supports standard operations like {@link #filter(net.ninjacat.smooth.functions.Predicate)}, {@link #map(net.ninjacat.smooth.functions.Func)}
- * or {@link #reduce(Object, net.ninjacat.smooth.functions.Function2)} and others.
+ * <p>Main difference from standard {@link Iterator} is that this iterator allows functions to be applied to the elements.
+ * It supports standard operations like {@link #filter(Predicate)}, {@link #map(Func)}
+ * or {@link #reduce(Object, Function2)} and others.
  * </p>
  * <p/>
  * <p>This is essentially a rich wrapper around {@link Iterator} over collection. Standard limitations of iterators apply,
@@ -47,7 +49,7 @@ public class Iter<E> implements Iterable<E> {
 
     /**
      * Creates iterator over collection. If the collection is changed during iteration (especially possible with lazy calculations)
-     * {@link java.util.ConcurrentModificationException} may be thrown.
+     * {@link ConcurrentModificationException} may be thrown.
      *
      * @param coll collection to be wrapped
      * @param <E>  type of elements in the collection
@@ -59,12 +61,12 @@ public class Iter<E> implements Iterable<E> {
 
     /**
      * <p>
-     * Creates rich iterator wrapper around Java {@link java.util.Iterator}.
+     * Creates rich iterator wrapper around Java {@link Iterator}.
      * </p><p>
      * Do not use wrapped iterator as it will interfere with operations over rich iterator.
      * </p>
      *
-     * @param iter {@link java.util.Iterator} to wrap with rich functionality
+     * @param iter {@link Iterator} to wrap with rich functionality
      * @param <E>  type of elements in the collection
      * @return Rich iterator wrapped around Java iterator
      */
@@ -89,14 +91,14 @@ public class Iter<E> implements Iterable<E> {
     }
 
     /**
-     * @return {@link java.util.List} containing all the items from this iterator. Returned list is immutable
+     * @return {@link List} containing all the items from this iterator. Returned list is immutable
      */
     public List<E> toList() {
         return Collect.iteratorToList(this.iterator);
     }
 
     /**
-     * @return {@link java.util.Set} containing all the items from this iterator. Returned list is immutable
+     * @return {@link Set} containing all the items from this iterator. Returned list is immutable
      */
     public Set<E> toSet() {
         return Collect.iteratorToSet(this.iterator);
@@ -124,9 +126,30 @@ public class Iter<E> implements Iterable<E> {
     }
 
     /**
+     * <p>
+     * Returns an array containing all of the elements in this iterable in proper sequence (from first to last element);
+     * the runtime type of the returned array is that of the specified array. If the list fits in the specified array,
+     * it is returned therein. Otherwise, a new array is allocated with the runtime type of the specified array and the
+     * size of this Iterable.
+     * </p><p>
+     * If the list fits in the specified array with room to spare (i.e., the array has more elements than the iterable),
+     * the element in the array immediately following the end of the list is set to null.
+     * (This is useful in determining the length of the list only if the caller knows that the list does not contain any null elements.)
+     * </p>
+     *
+     * @return an array containing the elements of this iterable
+     */
+    public E[] toArray(final Class<E> arrayType) {
+        final List<E> list = toList();
+        @SuppressWarnings("unchecked") final E[] array = (E[]) Array.newInstance(arrayType, list.size());
+        list.toArray(array);
+        return array;
+    }
+
+    /**
      * <p>Maps all the values in the iterator to other values using supplied function.</p>
      * <p>This function will not create new iterator, instead transformation function will be applied to
-     * the next original iterator's element during each call to {@link java.util.Iterator#next()} </p>
+     * the next original iterator's element during each call to {@link Iterator#next()} </p>
      *
      * @param func mapping function
      * @param <R>  result type
@@ -208,7 +231,7 @@ public class Iter<E> implements Iterable<E> {
      *
      * @param predicate - function to verify iterator element
      * @return {@link Iterable} iterator. This function will not create resulting iterator immediately, instead next
-     * element will be evaluated when requested with {@link java.util.Iterator#next()}
+     * element will be evaluated when requested with {@link Iterator#next()}
      */
     public Iter<E> filter(final Predicate<E> predicate) {
         return new Iter<E>(new Iterator<E>() {
@@ -264,9 +287,9 @@ public class Iter<E> implements Iterable<E> {
     }
 
     /**
-     * Lazy variant of {@link #find(net.ninjacat.smooth.functions.Predicate, Object)}
+     * Lazy variant of {@link #find(Predicate, Object)}
      *
-     * @param matcher      {@link net.ninjacat.smooth.functions.Predicate} to test iterator elements
+     * @param matcher      {@link Predicate} to test iterator elements
      * @param defaultValue default value that will be returned if none of the elements in the iterator matches predicate
      * @return Promise to find element that matches predicate
      */
@@ -346,5 +369,18 @@ public class Iter<E> implements Iterable<E> {
         return collector.collect(this);
     }
 
+    /**
+     * Converts this iterable into map using provided key generator function.
+     * <p/>
+     * For each element map key is generated using keyGenerator and key->element pair is inserted into the map. Generated
+     * map is unmodifiable.
+     *
+     * @param keyGenerator Key generator function which should create a key from the iterable element.
+     * @param <K>          Type of the key.
+     * @return Unmodifiable map of type &lt;K, E&gt;
+     */
+    public <K> Map<K, E> toMap(final Func<K, E> keyGenerator) {
+        return Maps.toUnmodifiableMap(this, keyGenerator);
+    }
 }
 

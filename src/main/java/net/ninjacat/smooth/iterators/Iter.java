@@ -353,9 +353,11 @@ public class Iter<E> implements Iterable<E> {
     public String mkStr(final String separator) {
         final StringBuilder builder = new StringBuilder();
         while (this.iterator.hasNext()) {
-            builder.append(this.iterator.next().toString()).append(separator);
+            builder.append(this.iterator.next().toString());
+            if (this.iterator.hasNext()) {
+                builder.append(separator);
+            }
         }
-        builder.setLength(builder.length() - separator.length());
         return builder.toString();
     }
 

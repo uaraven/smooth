@@ -300,6 +300,16 @@ public class IterTest {
     }
 
     @Test
+    public void shouldMkStrShouldHandleEmptyCollections() throws Exception {
+        final Iter<Integer> iter = Iter.of();
+
+        final String result = iter.mkStr("->");
+
+        assertThat("Should create empty string", result, is(""));
+    }
+
+
+    @Test
     public void shouldCollectElements() throws Exception {
         final Iter<Integer> iter = Iter.of(1, 2, 3);
 

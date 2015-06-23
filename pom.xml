@@ -5,7 +5,7 @@
 
     <groupId>net.ninjacat</groupId>
     <artifactId>smooth</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Collections and concurrency utility functions for Java</description>

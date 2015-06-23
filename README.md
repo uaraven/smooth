@@ -1,6 +1,6 @@
 # Smooth #
 
-v 0.1.4
+v 0.1.5
 
 Smooth is a lightweight library for when you don't need full guava. 
 Our use case for it are Android applications. Given Android's limitation of number of methods in an APK it sometimes make sense to ditch huge Guava library when you only need a small piece of its functionality.
@@ -29,7 +29,7 @@ It only have a handful of features:
   <dependency>
     <groupId>net.ninjacat</groupId>
     <artifactId>smooth</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.5</version>
   </dependency>
 ...
 </dependencies>
@@ -42,7 +42,7 @@ It only have a handful of features:
 
 dependencies {
 ...
-   compile group: 'net.ninjacat', name: 'smooth', version: '0.1.1'
+   compile group: 'net.ninjacat', name: 'smooth', version: '0.1.5'
 ...
 }
 ```

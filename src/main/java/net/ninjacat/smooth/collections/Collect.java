@@ -33,6 +33,7 @@ public final class Collect {
      * @param <E>      type of the elements
      * @return Unmodifiable list
      */
+    @SafeVarargs
     public static <E> List<E> listOf(final E... elements) {
         return Collections.unmodifiableList(Arrays.asList(elements));
     }
@@ -44,6 +45,7 @@ public final class Collect {
      * @param <E>      type of the elements
      * @return Unmodifiable set
      */
+    @SafeVarargs
     public static <E> Set<E> setOf(final E... elements) {
         final Set<E> result = new HashSet<E>();
         Collections.addAll(result, elements);
@@ -51,7 +53,7 @@ public final class Collect {
     }
 
     /**
-     * Converts {@link java.util.Iterator} to list
+     * Converts {@link Iterator} to list
      *
      * @param iter iterator to read into list
      * @param <E>  type of elements
@@ -62,7 +64,7 @@ public final class Collect {
     }
 
     /**
-     * Converts {@link java.util.Iterator} to a set
+     * Converts {@link Iterator} to a set
      *
      * @param iter iterator to read into a set
      * @param <E>  type of elements
@@ -101,7 +103,7 @@ public final class Collect {
 
     /**
      * <p>
-     * Reads elements from {@link java.util.Iterator} to a supplied collection
+     * Reads elements from {@link Iterator} to a supplied collection
      * </p>
      * <p>Elements read from iterator will be added to existing elements in the collection</p>
      *

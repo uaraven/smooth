@@ -5,9 +5,9 @@ import org.junit.Test;
 
 import java.util.*;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItems;
 
 public class CollectorsTest {
 
@@ -16,12 +16,12 @@ public class CollectorsTest {
 
     @Before
     public void setUp() throws Exception {
-        iter = Iter.of(1, 2, 3);
+        this.iter = Iter.of(1, 2, 3);
     }
 
     @Test
     public void shouldCollectElementsToArrayList() throws Exception {
-        Collection<Integer> collection = iter.collectWith(Collectors.<Integer>arrayList());
+        Collection<Integer> collection = this.iter.collectWith(Collectors.<Integer>arrayList());
 
         assertThat("collected data should contain elements from iterable", collection, hasItems(1, 2, 3));
         assertThat("collection type should be ArrayList", collection, instanceOf(ArrayList.class));
@@ -29,7 +29,7 @@ public class CollectorsTest {
 
     @Test
     public void shouldCollectElementsToLinkedList() throws Exception {
-        Collection<Integer> collection = iter.collectWith(Collectors.<Integer>linkedList());
+        Collection<Integer> collection = this.iter.collectWith(Collectors.<Integer>linkedList());
 
         assertThat("collected data should contain elements from iterable", collection, hasItems(1, 2, 3));
         assertThat("collection type should be ArrayList", collection, instanceOf(LinkedList.class));
@@ -37,7 +37,7 @@ public class CollectorsTest {
 
     @Test
     public void shouldCollectElementsToHashSet() throws Exception {
-        Collection<Integer> collection = iter.collectWith(Collectors.<Integer>hashSet());
+        Collection<Integer> collection = this.iter.collectWith(Collectors.<Integer>hashSet());
 
         assertThat("collected data should contain elements from iterable", collection, hasItems(1, 2, 3));
         assertThat("collection type should be ArrayList", collection, instanceOf(HashSet.class));
@@ -45,7 +45,7 @@ public class CollectorsTest {
 
     @Test
     public void shouldCollectElementsToTreeSet() throws Exception {
-        Collection<Integer> collection = iter.collectWith(Collectors.<Integer>treeSet());
+        Collection<Integer> collection = this.iter.collectWith(Collectors.<Integer>treeSet());
 
         assertThat("collected data should contain elements from iterable", collection, hasItems(1, 2, 3));
         assertThat("collection type should be ArrayList", collection, instanceOf(TreeSet.class));

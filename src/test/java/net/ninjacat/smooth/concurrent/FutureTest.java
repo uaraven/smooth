@@ -31,12 +31,13 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
+@SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
 public class FutureTest {
 
     private final Answer<java.util.concurrent.Future<?>> answer = new Answer<java.util.concurrent.Future<?>>() {
         @Override
-        public java.util.concurrent.Future<?> answer(InvocationOnMock invocationOnMock) throws Throwable {
-            Runnable arg = (Runnable) invocationOnMock.getArguments()[0];
+        public java.util.concurrent.Future<?> answer(final InvocationOnMock invocationOnMock) throws Throwable {
+            final Runnable arg = (Runnable) invocationOnMock.getArguments()[0];
             arg.run();
             return mock(java.util.concurrent.Future.class);
         }
@@ -44,7 +45,7 @@ public class FutureTest {
 
     @Test
     public void shouldCallSuccessAfterDelay() throws Exception {
-        Future<Integer> integerFuture = new Future<Integer>();
+        final Future<Integer> integerFuture = new Future<>();
         integerFuture.doIt(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -55,7 +56,7 @@ public class FutureTest {
         Thread.sleep(100);
         integerFuture.onSuccess(new Procedure<Integer>() {
             @Override
-            public void call(Integer integer) {
+            public void call(final Integer integer) {
                 result[0] = integer;
             }
         });
@@ -66,12 +67,12 @@ public class FutureTest {
     @Test
     public void shouldCallOnSuccessImmediately() throws Exception {
         final int[] result = new int[1];
-        ExecutorService service = getExecutorService();
-        Future<Integer> integerFuture = new Future<Integer>(service);
+        final ExecutorService service = getExecutorService();
+        final Future<Integer> integerFuture = new Future<>(service);
 
         integerFuture.onSuccess(new Procedure<Integer>() {
             @Override
-            public void call(Integer integer) {
+            public void call(final Integer integer) {
                 result[0] = integer;
             }
         });
@@ -88,7 +89,7 @@ public class FutureTest {
 
     @Test
     public void shouldReportFailureAfterDelay() throws Exception {
-        Future<Integer> integerFuture = new Future<Integer>();
+        final Future<Integer> integerFuture = new Future<>();
         integerFuture.doIt(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -101,14 +102,14 @@ public class FutureTest {
         final int[] result = new int[1];
         integerFuture.onSuccess(new Procedure<Integer>() {
             @Override
-            public void call(Integer integer) {
+            public void call(final Integer integer) {
                 result[0] = integer;
             }
         });
         assertEquals("Should read result from future", 0, result[0]);
         integerFuture.onFailure(new Procedure<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void call(final Throwable throwable) {
                 assertTrue("Expecting IllegalAccessException", throwable instanceof IllegalAccessException);
             }
         });
@@ -117,10 +118,10 @@ public class FutureTest {
     @Test
     public void shouldReportFailureImmediately() throws Exception {
         final boolean[] failed = new boolean[1];
-        Future<Integer> integerFuture = new Future<Integer>(getExecutorService());
+        final Future<Integer> integerFuture = new Future<>(getExecutorService());
         integerFuture.onFailure(new Procedure<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void call(final Throwable throwable) {
                 failed[0] = throwable instanceof IllegalAccessException;
             }
         });
@@ -136,9 +137,9 @@ public class FutureTest {
 
     @Test
     public void shouldChainSuccessfulExecution() throws Exception {
-        Func<Integer, Integer> increment = new Func<Integer, Integer>() {
+        final Func<Integer, Integer> increment = new Func<Integer, Integer>() {
             @Override
-            public Integer apply(Integer integer) {
+            public Integer apply(final Integer integer) {
                 return integer + 1;
             }
         };
@@ -150,7 +151,7 @@ public class FutureTest {
             }
         }).then(increment).then(increment).onSuccess(new Procedure<Integer>() {
             @Override
-            public void call(Integer integer) {
+            public void call(final Integer integer) {
                 result[0] = integer;
             }
         });
@@ -160,9 +161,9 @@ public class FutureTest {
 
     @Test
     public void shouldChainFailedExecution() throws Exception {
-        Func<Integer, Integer> increment = new Func<Integer, Integer>() {
+        final Func<Integer, Integer> increment = new Func<Integer, Integer>() {
             @Override
-            public Integer apply(Integer integer) {
+            public Integer apply(final Integer integer) {
                 throw new IllegalStateException("");
             }
         };
@@ -175,13 +176,13 @@ public class FutureTest {
         }).then(increment).then(increment)
                 .onSuccess(new Procedure<Integer>() {
                     @Override
-                    public void call(Integer integer) {
+                    public void call(final Integer integer) {
                         result[0] = integer;
                     }
                 })
                 .onFailure(new Procedure<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void call(final Throwable throwable) {
                         result[0] = -1;
                     }
                 });
@@ -190,7 +191,7 @@ public class FutureTest {
     }
 
     private ExecutorService getExecutorService() {
-        ExecutorService service = mock(ExecutorService.class);
+        final ExecutorService service = mock(ExecutorService.class);
         doAnswer(answer).when(service).submit(any(Runnable.class));
         return service;
     }

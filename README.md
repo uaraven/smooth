@@ -12,6 +12,7 @@ It only have a handful of features:
   
   * Collection utilities, like static map/filter methods and factories.
   * Rich Iterable wrapper allowing functional treatment of iterables (filter, map, foreach, find, reduce).
+  * Iterable wrapper for arrays
   * Functional interfaces.
   * Scala-like Future with chaining and callbacks.
   * Option, Either and Try classes for safe programming.

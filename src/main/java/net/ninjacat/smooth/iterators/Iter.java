@@ -91,6 +91,17 @@ public class Iter<E> implements Iterable<E> {
     }
 
     /**
+     * Creates rich iterator wrapper arount array of elements
+     *
+     * @param data
+     * @param <E>
+     * @return
+     */
+    public static <E> Iter<E> fromArray(final E[] data) {
+        return Iter.of(Arrays.asList(data));
+    }
+
+    /**
      * @return {@link List} containing all the items from this iterator. Returned list is immutable
      */
     public List<E> toList() {

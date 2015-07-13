@@ -45,7 +45,7 @@ public class FutureTest {
 
     @Test
     public void shouldCallSuccessAfterDelay() throws Exception {
-        final Future<Integer> integerFuture = new Future<>();
+        final Future<Integer> integerFuture = new Future<Integer>();
         integerFuture.doIt(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -68,7 +68,7 @@ public class FutureTest {
     public void shouldCallOnSuccessImmediately() throws Exception {
         final int[] result = new int[1];
         final ExecutorService service = getExecutorService();
-        final Future<Integer> integerFuture = new Future<>(service);
+        final Future<Integer> integerFuture = new Future<Integer>(service);
 
         integerFuture.onSuccess(new Procedure<Integer>() {
             @Override
@@ -89,7 +89,7 @@ public class FutureTest {
 
     @Test
     public void shouldReportFailureAfterDelay() throws Exception {
-        final Future<Integer> integerFuture = new Future<>();
+        final Future<Integer> integerFuture = new Future<Integer>();
         integerFuture.doIt(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -118,7 +118,7 @@ public class FutureTest {
     @Test
     public void shouldReportFailureImmediately() throws Exception {
         final boolean[] failed = new boolean[1];
-        final Future<Integer> integerFuture = new Future<>(getExecutorService());
+        final Future<Integer> integerFuture = new Future<Integer>(getExecutorService());
         integerFuture.onFailure(new Procedure<Throwable>() {
             @Override
             public void call(final Throwable throwable) {

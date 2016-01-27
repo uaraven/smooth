@@ -31,6 +31,7 @@ public class ArrayIterable<T> implements Iterable<T> {
         return new ArrayIterable<T>(data);
     }
 
+    @Override
     public Iterator<T> iterator() {
         return new ArrayIterator<T>(this.data);
     }

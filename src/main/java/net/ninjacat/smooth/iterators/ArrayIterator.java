@@ -33,14 +33,17 @@ public class ArrayIterator<T> implements Iterator<T> {
         return new ArrayIterator<T>(data);
     }
 
+    @Override
     public boolean hasNext() {
         return this.position < this.data.length;
     }
 
+    @Override
     public synchronized T next() {
         return this.data[this.position++];
     }
 
+    @Override
     public void remove() {
         throw new UnsupportedOperationException(getClass().getCanonicalName() + " does not support remove()");
     }

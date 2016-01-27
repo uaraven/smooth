@@ -25,11 +25,8 @@ import java.util.concurrent.ExecutorService;
 
 class ChainableFuture<E, T> extends Future<E> {
 
-    private final Func<E, T> transform;
-
     ChainableFuture(final Future<T> parent, final Func<E, T> transform, final ExecutorService executorService) {
         super(executorService);
-        this.transform = transform;
 
         final Procedure<T> onPrevSuccess = new Procedure<T>() {
             @Override
@@ -37,7 +34,7 @@ class ChainableFuture<E, T> extends Future<E> {
                 doIt(new Callable<E>() {
                     @Override
                     public E call() throws Exception {
-                        return ChainableFuture.this.transform.apply(t);
+                        return transform.apply(t);
                     }
                 });
             }

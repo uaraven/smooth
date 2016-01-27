@@ -5,7 +5,7 @@
   <packaging>jar</packaging>
   <groupId>net.ninjacat</groupId>
   <artifactId>smooth</artifactId>
-  <version>0.1.6</version>
+  <version>0.2.0</version>
   <name>${project.groupId}:${project.artifactId}</name>
   <description>Collections and concurrency utility functions for Java</description>
   <url>https://bitbucket.org/uaraven/smooth</url>
@@ -59,8 +59,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.3</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
       <plugin>

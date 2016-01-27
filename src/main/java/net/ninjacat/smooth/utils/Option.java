@@ -17,6 +17,7 @@
 package net.ninjacat.smooth.utils;
 
 import net.ninjacat.smooth.functions.Func;
+import net.ninjacat.smooth.functions.Provider;
 
 /**
  * An immutable object that contains either a non-null reference to another object or contains nothing, i.e. absent.
@@ -74,6 +75,16 @@ public class Option<T> {
     }
 
     /**
+     * Returns wrapped value if this Option is not absent, otherwise calls supplied {@link Provider} to calculate a new
+     * value.
+     * @param provider Provider to create an alternative value/
+     * @return Wrapped or generated value.
+     */
+    public T orGet(final Provider<T> provider) {
+        return isPresent() ? this.ref : provider.get();
+    }
+
+    /**
      * @return Wrapped value or null if this Option is absent.
      */
     public T orNull() {
@@ -84,7 +95,7 @@ public class Option<T> {
      * Retrieves wrapped value. If this Option is empty, then {@link NullPointerException} will be thrown.
      *
      * @return Wrapped value.
-     * @throws java.lang.NullPointerException if Option is empty.
+     * @throws NullPointerException if Option is empty.
      */
     public T get() {
         if (null == this.ref) {

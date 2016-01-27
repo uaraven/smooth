@@ -192,7 +192,7 @@ public class FutureTest {
 
     private ExecutorService getExecutorService() {
         final ExecutorService service = mock(ExecutorService.class);
-        doAnswer(answer).when(service).submit(any(Runnable.class));
+        doAnswer(this.answer).when(service).submit(any(Runnable.class));
         return service;
     }
 

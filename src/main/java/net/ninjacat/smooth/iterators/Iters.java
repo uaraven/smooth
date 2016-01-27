@@ -25,6 +25,7 @@ import java.util.NoSuchElementException;
 public final class Iters {
 
     private Iters() {
+        super();
     }
 
     /**

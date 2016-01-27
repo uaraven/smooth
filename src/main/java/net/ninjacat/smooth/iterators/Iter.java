@@ -36,6 +36,7 @@ import java.util.*;
  *
  * @param <E> Type of the elements in the iterator
  */
+@SuppressWarnings("ClassNamingConvention")
 public class Iter<E> implements Iterable<E> {
     private final Iterator<E> iterator;
 
@@ -44,7 +45,7 @@ public class Iter<E> implements Iterable<E> {
     }
 
     public static <E> Iter<E> of(final Enumeration<E> enumeration) {
-        return new Iter<E>(Collect.enumerationToIterator(enumeration));
+        return new Iter<>(Collect.enumerationToIterator(enumeration));
     }
 
     /**
@@ -91,7 +92,7 @@ public class Iter<E> implements Iterable<E> {
     }
 
     /**
-     * Creates rich iterator wrapper arount array of elements
+     * Creates rich iterator wrapper around array of elements
      *
      * @param data
      * @param <E>

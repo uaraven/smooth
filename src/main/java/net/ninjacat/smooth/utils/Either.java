@@ -67,14 +67,14 @@ public abstract class Either<F, S> {
     /**
      * Retrieve the first value. Will throw exception if in this instance has no first value.
      * @return The first value.
-     * @throws java.lang.IllegalStateException if this instance has no first value.
+     * @throws IllegalStateException if this instance has no first value.
      */
     public abstract F getFirst();
 
     /**
      * Retrieve the second value. Will throw exception if in this instance has no second value.
      * @return The second value.
-     * @throws java.lang.IllegalStateException if this instance has no second value.
+     * @throws IllegalStateException if this instance has no second value.
      */
     public abstract S getSecond();
 

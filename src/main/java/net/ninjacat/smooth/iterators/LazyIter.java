@@ -11,9 +11,9 @@ import java.util.*;
 /**
  * <p>Functional style <strong>lazy</strong> immutable rich iterator</p>
  * <p/>
- * <p>Main difference from standard {@link java.util.Iterator} is that this iterator allows functions to be applied to the elements.
- * It supports standard operations like {@link #filter(net.ninjacat.smooth.functions.Predicate)}, {@link #map(net.ninjacat.smooth.functions.Func)}
- * or {@link #reduce(Object, net.ninjacat.smooth.functions.Function2)} and others.
+ * <p>Main difference from standard {@link Iterator} is that this iterator allows functions to be applied to the elements.
+ * It supports standard operations like {@link #filter(Predicate)}, {@link #map(Func)}
+ * or {@link #reduce(Object, Function2)} and others.
  * </p>
  * <p>
  * Most of the methods are lazy, they do not perform any action at the call time, but return either {@link Iterable} or {@link Promise}.
@@ -99,10 +99,11 @@ public class LazyIter<E> implements Iterable<E> {
     }
 
     /**
-     * Returns {@link java.util.Iterator} for the elements in this Iterable
+     * Returns {@link Iterator} for the elements in this Iterable
      *
      * @return An Iterator instance.
      */
+    @Override
     public Iterator<E> iterator() {
         return this.collection.iterator();
     }
@@ -110,7 +111,7 @@ public class LazyIter<E> implements Iterable<E> {
     /**
      * <p>Maps all the values in the collection to other values using supplied function.</p>
      * <p>This function will not create new collection, instead transformation function will be applied to
-     * the next original collection's element during each call to {@link java.util.Iterator#next()} </p>
+     * the next original collection's element during each call to {@link Iterator#next()} </p>
      *
      * @param func mapping function
      * @param <R>  result type
@@ -143,7 +144,7 @@ public class LazyIter<E> implements Iterable<E> {
      *
      * @param predicate - function to verify collection element
      * @return {@link Iterable} collection. This function will not create resulting collection immediately, instead next
-     * element will be evaluated when requested with {@link java.util.Iterator#next()}
+     * element will be evaluated when requested with {@link Iterator#next()}
      */
     public LazyIter<E> filter(final Predicate<E> predicate) {
         return new LazyIter<E>(this.collection.filter(predicate));

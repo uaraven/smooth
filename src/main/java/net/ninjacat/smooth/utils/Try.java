@@ -30,7 +30,7 @@ public abstract class Try<T> {
     }
 
     /**
-     * Executes code supplied as {@link java.util.concurrent.Callable}.
+     * Executes code supplied as {@link Callable}.
      *
      * @param code Callable to execute
      * @param <T>  type of resulting value
@@ -48,6 +48,7 @@ public abstract class Try<T> {
     /**
      * <p>Executes unary function</p>
      * <p>Usage:<br> {@code Try.execute(function).with(42);}</p>
+     * Allows to create a
      *
      * @param func function to be executed
      * @param <P>  type of parameter
@@ -65,13 +66,13 @@ public abstract class Try<T> {
 
     /**
      * @return value of the execution
-     * @throws java.lang.IllegalStateException if execution was not successful. Use {@link #isSuccessful()} to check execution status.
+     * @throws IllegalStateException if execution was not successful. Use {@link #isSuccessful()} to check execution status.
      */
     public abstract T getValue();
 
     /**
      * @return exception which caused failure
-     * @throws java.lang.IllegalStateException if execution was successful. Use {@link #isSuccessful()} to check execution status.
+     * @throws IllegalStateException if execution was successful. Use {@link #isSuccessful()} to check execution status.
      */
     public abstract Throwable getFailure();
 
@@ -190,6 +191,12 @@ public abstract class Try<T> {
             this.function = function;
         }
 
+        /**
+         * Supplies a parameter to a function which will be executed within {@link Try}
+         *
+         * @param parameter Parameter to pass to the function
+         * @return result of the function execution wrapped in {@link Try}
+         */
         public Try<R> with(final P parameter) {
             try {
                 return new Success<R>(this.function.apply(parameter));

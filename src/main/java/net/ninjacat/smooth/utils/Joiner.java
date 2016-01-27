@@ -35,7 +35,7 @@ public class Joiner {
 
     /**
      * Creates a new Joiner object with a specified separator. New Joiner will fail on {@code null} values in input
-     * and will add separators even if they are already present
+     * and will put separators even if they are already present
      *
      * @param separator Separator to use for text concatenation.
      * @return new Joiner object.

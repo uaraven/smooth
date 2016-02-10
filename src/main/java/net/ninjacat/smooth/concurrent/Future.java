@@ -22,6 +22,7 @@ import net.ninjacat.smooth.utils.Try;
 import net.ninjacat.smooth.validator.Validators;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,6 +49,7 @@ import java.util.concurrent.Executors;
 public class Future<E> {
     private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newCachedThreadPool();
     private final ExecutorService executor;
+    private final CountDownLatch latch;
     private volatile Procedure<E> successHandler;
     private volatile Procedure<Throwable> failHandler;
     private volatile Try<E> result;
@@ -68,6 +70,7 @@ public class Future<E> {
     public Future(final ExecutorService executor) {
         this.executor = null == executor ? DEFAULT_EXECUTOR_SERVICE : executor;
         this.result = null;
+        this.latch = new CountDownLatch(1);
     }
 
     /**
@@ -167,9 +170,22 @@ public class Future<E> {
                 } else {
                     reportFailure(Future.this.result.getFailure());
                 }
+                Future.this.latch.countDown();
             }
         });
         return this;
+    }
+
+    /**
+     * Returns the result of the Future. This call will block if result is not available yet. Result is returned
+     * wrapped in {@link Try} so that exceptions during future execution are captured.
+     *
+     * @return Result of the Future wrapped in Try
+     * @throws InterruptedException If waiting for the future result was interrupted
+     */
+    public Try<E> getResult() throws InterruptedException {
+        this.latch.await();
+        return this.result;
     }
 
     private void reportSuccess(final E value) {

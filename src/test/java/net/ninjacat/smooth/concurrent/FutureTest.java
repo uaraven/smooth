@@ -18,6 +18,7 @@ package net.ninjacat.smooth.concurrent;
 
 import net.ninjacat.smooth.functions.Func;
 import net.ninjacat.smooth.functions.Procedure;
+import net.ninjacat.smooth.utils.Try;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -25,8 +26,7 @@ import org.mockito.stubbing.Answer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -45,7 +45,7 @@ public class FutureTest {
 
     @Test
     public void shouldCallSuccessAfterDelay() throws Exception {
-        final Future<Integer> integerFuture = new Future<Integer>();
+        final Future<Integer> integerFuture = new Future<>();
         integerFuture.doIt(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -68,7 +68,7 @@ public class FutureTest {
     public void shouldCallOnSuccessImmediately() throws Exception {
         final int[] result = new int[1];
         final ExecutorService service = getExecutorService();
-        final Future<Integer> integerFuture = new Future<Integer>(service);
+        final Future<Integer> integerFuture = new Future<>(service);
 
         integerFuture.onSuccess(new Procedure<Integer>() {
             @Override
@@ -89,7 +89,7 @@ public class FutureTest {
 
     @Test
     public void shouldReportFailureAfterDelay() throws Exception {
-        final Future<Integer> integerFuture = new Future<Integer>();
+        final Future<Integer> integerFuture = new Future<>();
         integerFuture.doIt(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
@@ -118,7 +118,7 @@ public class FutureTest {
     @Test
     public void shouldReportFailureImmediately() throws Exception {
         final boolean[] failed = new boolean[1];
-        final Future<Integer> integerFuture = new Future<Integer>(getExecutorService());
+        final Future<Integer> integerFuture = new Future<>(getExecutorService());
         integerFuture.onFailure(new Procedure<Throwable>() {
             @Override
             public void call(final Throwable throwable) {
@@ -188,6 +188,54 @@ public class FutureTest {
                 });
         Thread.sleep(100);
         assertEquals("Expecting failure to be propagated and reported", -1, result[0]);
+    }
+
+
+    @Test
+    public void shouldReturnSuccessfulResult() throws Exception {
+        final ExecutorService service = getExecutorService();
+        final Future<Integer> integerFuture = new Future<>(service);
+        final long start = System.currentTimeMillis();
+        final Try<Integer> result = integerFuture.doIt(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return 42;
+            }
+        }).getResult();
+
+        assertEquals("Should read result from future", 42, (int) result.getValue());
+        assertTrue("Should not have waited for result", System.currentTimeMillis() - start < 50);
+    }
+
+    @Test
+    public void shouldReturnFailure() throws Exception {
+        final Future<Integer> integerFuture = new Future<>(getExecutorService());
+        final Try<Integer> result = integerFuture.doIt(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                throw new IllegalAccessException("");
+            }
+        }).getResult();
+
+        assertFalse("Expecting failure to be reported", result.isSuccessful());
+    }
+
+
+    @Test
+    public void shouldReturnSuccessfulResultAfterBlocking() throws Exception {
+        final ExecutorService service = getExecutorService();
+        final Future<Integer> integerFuture = new Future<>(service);
+        final long start = System.currentTimeMillis();
+        final Try<Integer> result = integerFuture.doIt(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                Thread.sleep(200);
+                return 42;
+            }
+        }).getResult();
+
+        assertEquals("Should read result from future", 42, (int) result.getValue());
+        assertTrue("Should block waiting for result", System.currentTimeMillis() - start > 100);
     }
 
     private ExecutorService getExecutorService() {

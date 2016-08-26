@@ -39,10 +39,33 @@ public abstract class Try<T> {
      */
     public static <T> Try<T> execute(final Callable<T> code) {
         try {
-            return new Success<T>(code.call());
+            return success(code.call());
         } catch (final Throwable thr) {
-            return new Failure<T>(thr);
+            return failure(thr);
         }
+    }
+
+    /**
+     * Creates a successful Try instance.
+     *
+     * @param value Value of the Try
+     * @param <T>   Type of the value
+     * @return Successful result
+     */
+    public static <T> Try<T> success(final T value) {
+        return new Success<>(value);
+    }
+
+
+    /**
+     * Creates a failed Try instance.
+     *
+     * @param fail Throwable of the failure
+     * @param <T>  Type of the possible result
+     * @return Failed result
+     */
+    public static <T> Try<T> failure(final Throwable fail) {
+        return new Failure<>(fail);
     }
 
     /**
@@ -56,7 +79,7 @@ public abstract class Try<T> {
      * @return delayed function execution which can be executed by supplying it with parameter.
      */
     public static <P, T> FunctionExecutor<T, P> execute(final Func<T, P> func) {
-        return new FunctionExecutor<T, P>(func);
+        return new FunctionExecutor<>(func);
     }
 
     /**
@@ -103,7 +126,7 @@ public abstract class Try<T> {
         if (isSuccessful()) {
             return Try.execute(mapper).with(getValue());
         } else {
-            return new Failure<S>(getFailure());
+            return new Failure<>(getFailure());
         }
     }
 
@@ -199,9 +222,9 @@ public abstract class Try<T> {
          */
         public Try<R> with(final P parameter) {
             try {
-                return new Success<R>(this.function.apply(parameter));
+                return success(this.function.apply(parameter));
             } catch (final Throwable thr) {
-                return new Failure<R>(thr);
+                return failure(thr);
             }
         }
     }

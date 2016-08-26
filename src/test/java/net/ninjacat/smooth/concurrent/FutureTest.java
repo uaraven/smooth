@@ -3,7 +3,7 @@
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ *    You may obtain a copy of the License atmvn
  *
  *        http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -26,6 +26,7 @@ import org.mockito.stubbing.Answer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -222,6 +223,31 @@ public class FutureTest {
 
 
     @Test
+    public void shouldCorrectlyReportThenFuturesIsNotCompleted() throws Exception {
+        final Future<Integer> integerFuture = Future.run(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                Thread.sleep(200);
+                return 42;
+            }
+        });
+        assertThat(integerFuture.isCompleted(), is(false));
+    }
+
+    @Test
+    public void shouldCorrectlyReportThenFuturesIsCompleted() throws Exception {
+        final Future<Integer> integerFuture = Future.run(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                Thread.sleep(200);
+                return 42;
+            }
+        });
+        Thread.sleep(500);
+        assertThat(integerFuture.isCompleted(), is(true));
+    }
+
+    @Test
     public void shouldReturnSuccessfulResultAfterBlocking() throws Exception {
         final ExecutorService service = getExecutorService();
         final Future<Integer> integerFuture = new Future<>(service);
@@ -237,6 +263,7 @@ public class FutureTest {
         assertEquals("Should read result from future", 42, (int) result.getValue());
         assertTrue("Should block waiting for result", System.currentTimeMillis() - start > 100);
     }
+
 
     private ExecutorService getExecutorService() {
         final ExecutorService service = mock(ExecutorService.class);

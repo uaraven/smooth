@@ -25,12 +25,12 @@ import java.util.*;
 
 /**
  * <p>Functional style immutable rich iterator</p>
- * <p/>
+ * <p>
  * <p>Main difference from standard {@link Iterator} is that this iterator allows functions to be applied to the elements.
  * It supports standard operations like {@link #filter(Predicate)}, {@link #map(Func)}
  * or {@link #reduce(Object, Function2)} and others.
  * </p>
- * <p/>
+ * <p></p>
  * <p>This is essentially a rich wrapper around {@link Iterator} over collection. Standard limitations of iterators apply,
  * like restriction of changing collection during iteration</p>
  *
@@ -94,9 +94,9 @@ public class Iter<E> implements Iterable<E> {
     /**
      * Creates rich iterator wrapper around array of elements
      *
-     * @param data
-     * @param <E>
-     * @return
+     * @param data Array to create iterator for
+     * @param <E>  Array element type
+     * @return Rich iterator
      */
     public static <E> Iter<E> fromArray(final E[] data) {
         return Iter.of(Arrays.asList(data));
@@ -149,6 +149,7 @@ public class Iter<E> implements Iterable<E> {
      * (This is useful in determining the length of the list only if the caller knows that the list does not contain any null elements.)
      * </p>
      *
+     * @param arrayType Type of the array element
      * @return an array containing the elements of this iterable
      */
     public E[] toArray(final Class<E> arrayType) {
@@ -385,9 +386,10 @@ public class Iter<E> implements Iterable<E> {
 
     /**
      * Converts this iterable into map using provided key generator function.
-     * <p/>
-     * For each element map key is generated using keyGenerator and key->element pair is inserted into the map. Generated
+     * <p>
+     * For each element map key is generated using keyGenerator and key-&gt;element pair is inserted into the map. Generated
      * map is unmodifiable.
+     * </p>
      *
      * @param keyGenerator Key generator function which should create a key from the iterable element.
      * @param <K>          Type of the key.

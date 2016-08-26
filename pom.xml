@@ -5,7 +5,7 @@
   <packaging>jar</packaging>
   <groupId>net.ninjacat</groupId>
   <artifactId>smooth</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
   <name>${project.groupId}:${project.artifactId}</name>
   <description>Collections and concurrency utility functions for Java</description>
   <url>https://bitbucket.org/uaraven/smooth</url>

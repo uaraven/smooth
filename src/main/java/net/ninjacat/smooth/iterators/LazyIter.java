@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * <p>Functional style <strong>lazy</strong> immutable rich iterator</p>
- * <p/>
+ * <p>
  * <p>Main difference from standard {@link Iterator} is that this iterator allows functions to be applied to the elements.
  * It supports standard operations like {@link #filter(Predicate)}, {@link #map(Func)}
  * or {@link #reduce(Object, Function2)} and others.
@@ -18,7 +18,7 @@ import java.util.*;
  * <p>
  * Most of the methods are lazy, they do not perform any action at the call time, but return either {@link Iterable} or {@link Promise}.
  * </p>
- * <p/>
+ * <p>
  * <p>This is essentially a rich wrapper around {@link Iterator} over collection. Standard limitations of iterators apply,
  * like restriction of changing collection during iteration</p>
  *

@@ -46,6 +46,7 @@ import java.util.concurrent.Executors;
  * and exception as parameter. All the operations will be performed asynchronously.
  * </p>
  */
+@SuppressWarnings("WeakerAccess")
 public class Future<E> {
     private static final ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newCachedThreadPool();
     private final ExecutorService executor;
@@ -181,11 +182,23 @@ public class Future<E> {
      * wrapped in {@link Try} so that exceptions during future execution are captured.
      *
      * @return Result of the Future wrapped in Try
-     * @throws InterruptedException If waiting for the future result was interrupted
      */
-    public Try<E> getResult() throws InterruptedException {
-        this.latch.await();
-        return this.result;
+    public Try<E> getResult() {
+        try {
+            this.latch.await();
+            return this.result;
+        } catch (final InterruptedException e) {
+            return Try.failure(e);
+        }
+    }
+
+    /**
+     * Checks if execution is complete
+     *
+     * @return {@code true} if future is completed, {@code false} otherwise
+     */
+    public boolean isCompleted() {
+        return this.latch.getCount() == 0;
     }
 
     private void reportSuccess(final E value) {

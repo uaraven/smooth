@@ -31,7 +31,7 @@ It only have a handful of features:
   <dependency>
     <groupId>net.ninjacat</groupId>
     <artifactId>smooth</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
   </dependency>
 ...
 </dependencies>
@@ -44,7 +44,7 @@ It only have a handful of features:
 
 dependencies {
 ...
-   compile group: 'net.ninjacat', name: 'smooth', version: '0.2.0'
+   compile group: 'net.ninjacat', name: 'smooth', version: '0.2.1'
 ...
 }
 ```

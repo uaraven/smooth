@@ -44,7 +44,6 @@ import java.util.concurrent.Executors;
  * callable and transform completes successfully then {@link #onSuccess(Procedure)}
  * will be called, otherwise {@link #onFailure(Procedure)} will be called with
  * and exception as parameter. All the operations will be performed asynchronously.
- * </p>
  */
 @SuppressWarnings("WeakerAccess")
 public class Future<E> {

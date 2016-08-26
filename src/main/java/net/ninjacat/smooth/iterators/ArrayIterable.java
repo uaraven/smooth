@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 /**
  * Iterable wrapper around array.
- * <p/>
+ * <p>
  * Changes to underlying array will be reflected in this iterable.
  */
 public class ArrayIterable<T> implements Iterable<T> {

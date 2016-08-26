@@ -87,8 +87,9 @@ public final class Maps {
     /**
      * Converts iterable to map using provided Key generator function. Generator function is called on each
      * element of iterable and its result is used as a key for the map.
-     * <p/>
+     * <p>
      * Generated Map will be unmodifiable.
+     * </p>
      *
      * @param list         - Iterable to convert into {@link Map}
      * @param keyGenerator Key generator function.

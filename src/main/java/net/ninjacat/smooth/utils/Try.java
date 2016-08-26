@@ -116,7 +116,7 @@ public abstract class Try<T> {
      * <p>If both of the functions execute successfully then result will be {@link Try.Success} containing an integer,
      * if any of the functions fail with exception then result will be {@link Try.Failure} containing exception. This
      * code will never crash.</p>
-     * </p>
+     * <p>
      *
      * @param mapper function which accepts value from this object.
      * @param <S>    type of returning value of mapper function

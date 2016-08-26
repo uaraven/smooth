@@ -8,20 +8,20 @@ import java.util.Iterator;
 
 /**
  * Object that joins parts of text specified as iterable, varargs or array.
- * <p/>
+ * <p>
  * If neither skipNulls() nor useForNull(String) is specified, the joining methods will throw IllegalArgumentException
  * if any given element is null.
  */
 public class Joiner {
 
-    private final String separator;
-    private final String nullValue;
-    private final boolean skipNulls;
-    private final boolean duplicateSeparators;
     /**
      * Ready to use Joiner for paths
      */
     public static final Joiner PATH_JOINER = Joiner.on(File.separator).skipNulls().noDuplicateSeparators();
+    private final String separator;
+    private final String nullValue;
+    private final boolean skipNulls;
+    private final boolean duplicateSeparators;
 
     private Joiner(final String separator,
                    final String nullValue,
@@ -68,19 +68,19 @@ public class Joiner {
 
     /**
      * Configures Joiner to prevent duplicate separators. This is useful when constructing file system paths.
-     * <p/>
+     * <p>
      * For example
-     * <p/>
+     * <p>
      * {@code
      * Joiner.on("/").join("/", "somepath", "otherpath/", "/filename");
      * }
-     * <p/>
+     * <p>
      * will return {@code "//somepath/otherpath///filename"} and
-     * <p/>
+     * <p>
      * {@code
      * Joiner.on("/").noDuplicateSeparators().join("/", "somepath", "otherpath/", "/filename");
      * }
-     * <p/>
+     * <p>
      * will return {@code "/somepath/otherpath/filename"}
      *
      * @return Updated Joiner

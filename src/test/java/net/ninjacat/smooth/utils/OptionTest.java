@@ -17,7 +17,10 @@
 package net.ninjacat.smooth.utils;
 
 import net.ninjacat.smooth.functions.Func;
+import net.ninjacat.smooth.functions.Procedure;
 import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -81,6 +84,33 @@ public class OptionTest {
         final Option<String> option = Option.absent();
         assertFalse(option.isPresent());
     }
+
+    @Test
+    public void ifPresentShouldBeExecutedIfValuePresent() throws Exception {
+        final Option<String> option = Option.of("Test");
+        final AtomicReference<String> copy = new AtomicReference<>();
+        option.ifPresent(new Procedure<String>() {
+            @Override
+            public void call(final String s) {
+                copy.set(s);
+            }
+        });
+        assertThat(copy.get(), is("Test"));
+    }
+
+    @Test
+    public void ifPresentShouldNotBeExecutedIfValueAbsent() throws Exception {
+        final Option<String> option = Option.absent();
+        final AtomicReference<String> copy = new AtomicReference<>("Non-test");
+        option.ifPresent(new Procedure<String>() {
+            @Override
+            public void call(final String s) {
+                copy.set(s);
+            }
+        });
+        assertThat(copy.get(), is("Non-test"));
+    }
+
 
     @Test
     public void shouldTransformPresentOption() throws Exception {

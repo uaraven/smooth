@@ -17,6 +17,7 @@
 package net.ninjacat.smooth.utils;
 
 import net.ninjacat.smooth.functions.Func;
+import net.ninjacat.smooth.functions.Procedure;
 import net.ninjacat.smooth.functions.Provider;
 
 /**
@@ -65,6 +66,17 @@ public class Option<T> {
     }
 
     /**
+     * Executes {@link Procedure} if this option has value.
+     *
+     * @param proc Procedure that accepts parameter of the type of the Option
+     */
+    public void ifPresent(final Procedure<T> proc) {
+        if (isPresent()) {
+            proc.apply(this.ref);
+        }
+    }
+
+    /**
      * Returns wrapped value, if this Option is not absent or supplied alternative otherwise.
      *
      * @param alternative Alternative value to return if this Option is absent.
@@ -77,6 +89,7 @@ public class Option<T> {
     /**
      * Returns wrapped value if this Option is not absent, otherwise calls supplied {@link Provider} to calculate a new
      * value.
+     *
      * @param provider Provider to create an alternative value/
      * @return Wrapped or generated value.
      */

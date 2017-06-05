@@ -35,7 +35,7 @@ public final class Collect {
      */
     @SafeVarargs
     public static <E> List<E> listOf(final E... elements) {
-        return Collections.unmodifiableList(Arrays.asList(elements));
+        return Collections.unmodifiableList(java.util.Arrays.asList(elements));
     }
 
     /**

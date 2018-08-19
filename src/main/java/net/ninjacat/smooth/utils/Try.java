@@ -131,6 +131,22 @@ public abstract class Try<T> {
     }
 
     /**
+     * Tries to recover from failure with provided {@link Callable}.
+     * If original Try.execute() call was successful, no recovery is performed
+     *
+     * @param recoverCode Callable to call in the event of failure
+     * @return Either {@link Try.Success} or {@link Try.Failure}
+     */
+    public Try<T> recover(final Callable<T> recoverCode) {
+        if (isSuccessful()) {
+            return this;
+        } else {
+            return Try.execute(recoverCode);
+        }
+    }
+
+
+    /**
      * Retrieves result of computation from Try wrapped in {@link Option}.
      * If execution was successful it will return it, otherwise {@link Option#absent()} will be returned.
      *

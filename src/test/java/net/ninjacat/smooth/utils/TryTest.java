@@ -110,6 +110,23 @@ public class TryTest {
     }
 
     @Test
+    public void shouldRecover() {
+        final Try<Integer> actual = Try.execute(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return Integer.parseInt("forty-two");
+            }
+        }).recover(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return 84;
+            }
+        });
+
+        assertEquals(actual.get(), Option.of(84));
+    }
+
+    @Test
     public void mapShouldPropagateErrors() throws Exception {
         final Try<String> actual = Try.execute(new Callable<Integer>() {
             @Override
